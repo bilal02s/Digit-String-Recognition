@@ -4,6 +4,14 @@ class Layer:
     def __init__(self, input_size, output_size):
         self.weights = np.random.rand(input_size, output_size) 
         self.bias = np.random.rand(1, output_size) 
+        self.input_size = input_size
+        self.output_size = output_size
+
+    def getInputSize(self):
+        return self.input_size
+
+    def getOutputSize(self):
+        return self.output_size
 
     def setActivationFunction(self, activation, activation_prime):
         self.activation = activation

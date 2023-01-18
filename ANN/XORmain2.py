@@ -19,8 +19,8 @@ if __name__ == "__main__":
     train = np.array([[[0, 0]],[[0, 1]],[[1, 0]],[[1, 1]]])
     finalResult = np.array([[[0]], [[1]], [[1]], [[0]]])
 
-    #training the network
-    net.fit(train, finalResult, generation=1000, learning_rate=0.1, printOn=100)
+    #load parameters
+    net.load_parameters("XORparams.txt")
 
     #making predictions
     predictions = net.predict(train)
@@ -28,6 +28,3 @@ if __name__ == "__main__":
     #display predictions
     for i in range(len(train)):
         print("data : " + str(train[i]) + ", expected : " + str(finalResult[i]) + ", predicted : " + str(predictions[i]))
-        
-    #save parameters
-    net.save_parameters("XORparams.txt")

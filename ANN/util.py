@@ -5,7 +5,7 @@ def mse(prediction, expected):
     return np.mean(np.power(prediction - expected, 2))
 
 def mse_prime(prediction, expected):
-    return 2*(prediction - expected)/(10)
+    return 2*(prediction - expected)/expected.size
 
 # activation function and its derivative
 def tanh(x):

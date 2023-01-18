@@ -37,6 +37,7 @@ if __name__ == "__main__":
     net.addLayer(Layer(16, 10))
 
     #training the network
+    net.load_parameters("MnistParams2.txt")
     net.fit(x_train, y_train, generation=100, learning_rate=0.1, printOn=1)
 
     #making predictions
@@ -48,5 +49,5 @@ if __name__ == "__main__":
         print("expected : " + str(y_test[i]) + ", predicted : " + str(predictions[i]))
     
     #save parameters
-    net.save_parameters("MnistParams.txt")
+    net.save_parameters("MnistParams3.txt")
 
