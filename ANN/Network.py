@@ -31,7 +31,7 @@ class Network:
                 error = self.f_prime(output, result[i])
 
                 for layer in reversed(self.layers):
-                    error = layer.backpropagation(error, learning_rate)
+                    error = layer.backpropagation(error, learning_rate/(gen+1))
 
             error_value /= n
 
