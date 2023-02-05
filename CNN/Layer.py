@@ -26,6 +26,8 @@ class Layer:
 
     def backpropagation(self, error, learning_rate):
         # finding (dE/dz) * f'(y)
+        #print(error)
+        #print(self.activation_prime(self.output))
         common = error * self.activation_prime(self.output)
         self.bias_err = common
         self.input_err = np.dot(common, self.weights.T)
