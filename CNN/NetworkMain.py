@@ -48,7 +48,7 @@ if __name__ == "__main__":
     net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(3*13*13, 16))
+    net.addLayer(Layer(3*14*14, 16))
     net.addLayer(Layer(16, 16))
     net.addLayer(Layer(16, 10))
 

@@ -1,9 +1,9 @@
 import numpy as np
 from matplotlib import pyplot
-import ANN.util
+import util
 import kernels
-from ANN.Network import Network
-from ANN.Layer import Layer
+from Network import Network
+from Layer import Layer
 from ConvLayer import ConvLayer
 from MaxPooling import MaxPooling
 from FlattenLayer import FlattenLayer
