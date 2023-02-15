@@ -9,12 +9,6 @@ class ConvLayer:
         (rowK, colK) = kernel.shape
         (row, col) = matrix.shape
 
-        #output = np.ndarray((row-rowK+1, col-colK+1))
-
-        #for j in range(row-rowK+1):
-         #   for i in range(col-colK+1):
-          #      output[j, i] = np.sum(np.multiply(matrix[j:j+rowK, i:i+colK], kernel))
-
         i0 = np.repeat(np.arange(rowK), colK).reshape((-1, 1))
         i1 = np.repeat(np.arange(row), col).reshape((1, -1))
         j0 = np.tile(np.arange(colK), rowK).reshape((-1, 1))
