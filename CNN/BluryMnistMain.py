@@ -13,7 +13,7 @@ from keras.datasets import mnist
 from keras.utils import np_utils
 
 def modify_data(matrices):
-    blur = ConvLayer([kernels.gaussian])
+    blur = ConvLayer([kernels.gaussian_blur])
     modified = []
 
     for matrix in matrices:

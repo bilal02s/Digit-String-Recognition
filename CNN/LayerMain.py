@@ -22,7 +22,7 @@ if __name__ == "__main__":
     print('X_test:  '  + str(test_X.shape))
     print('Y_test:  '  + str(test_y.shape))
 
-    conv = ConvLayer([kernels.gaussian])
+    conv = ConvLayer([kernels.gaussian_blur])
     maxpool = MaxPooling(kernels.one, 2)
 
     for i in range(0, 2): 

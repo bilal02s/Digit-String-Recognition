@@ -16,7 +16,7 @@ class ConvLayer:
         i = i0 + i1
         j = j0 + j1
 
-        matrix_padded = np.pad(matrix, 1, mode='constant')
+        matrix_padded = np.pad(matrix, rowK//2, mode='constant')
         transformed_image = matrix_padded[i, j]
         output = np.dot(kernel.reshape((1, -1)), transformed_image).reshape((row, col))
 
