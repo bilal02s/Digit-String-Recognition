@@ -1,13 +1,13 @@
 import numpy as np
 from matplotlib import pyplot
 
-import util
-import kernels
-from Network import Network
-from Layer import Layer
-from ConvLayer import ConvLayer
-from MaxPooling import MaxPooling
-from FlattenLayer import FlattenLayer
+import util.util as util
+import util.kernels as kernels
+from network.Network import Network
+from network.Layer import Layer
+from network.ConvLayer import ConvLayer
+from network.MaxPooling import MaxPooling
+from network.FlattenLayer import FlattenLayer
 
 from keras.datasets import mnist
 from keras.utils import np_utils
@@ -48,9 +48,9 @@ if __name__ == "__main__":
     net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(3*14*14, 16))
-    net.addLayer(Layer(16, 16))
-    net.addLayer(Layer(16, 10))
+    net.addLayer(Layer(3*14*14, 100))
+    net.addLayer(Layer(100, 50))
+    net.addLayer(Layer(50, 10))
 
     #train the network
     net.fit(x_train, y_train, generation=35, learning_rate=0.1, printOn=1)
