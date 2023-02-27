@@ -54,8 +54,9 @@ class Network:
         file = open(filename, 'w')
         
         for layer in self.layers:
-            layer.weights.tofile(file, sep=' ')
-            layer.bias.tofile(file, sep=' ')
+            if hasattr(layer, "weights") and hasattr(layer, "weights"):
+                layer.weights.tofile(file, sep=' ')
+                layer.bias.tofile(file, sep=' ')
 
         file.close()
 
@@ -63,6 +64,9 @@ class Network:
         file = open(filename, 'r')
 
         for layer in self.layers:
+            if (not hasattr(layer, "weights")) or (not hasattr(layer, "weights")):
+                continue 
+
             weightsCount = layer.weights.size
             biasCount = layer.bias.size
 

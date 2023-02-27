@@ -28,11 +28,10 @@ if __name__ == "__main__":
 
     # training data : 60000 samples
     # reshape and normalize input data
-    #x_train = x_train.reshape(x_train.shape[0], 1, 28*28)
     print("manipulating data")
     x_train = x_train.astype('float32')
     x_train = x_train/128 - 1.0
-    x_train = modify_data(x_train)
+    #x_train = modify_data(x_train)
     x_train = [[sample] for sample in x_train]
 
     # encode output which is a number in range [0,9] into a vector of size 10
@@ -41,7 +40,6 @@ if __name__ == "__main__":
     y_train = y_train * 2 - 1
 
     # same for test data : 10000 samples
-    #x_test = x_test.reshape(x_test.shape[0], 1, 28*28)
     x_test = x_test.astype('float32')
     x_test = x_test/128 - 1.0
     x_test = modify_data(x_test)
@@ -70,7 +68,7 @@ if __name__ == "__main__":
     net.fit(x_train, y_train, generation=35, learning_rate=0.1, printOn=1)
 
     #making predictions
-    n = 10
+    n = 5
     predictions = net.predict(x_test[0:n])
 
     #display predictions
@@ -78,7 +76,7 @@ if __name__ == "__main__":
         print("expected : " + str(y_test[i]) + ", predicted : " + str(predictions[i]))
     
     #save parameters
-    net.save_parameters("params/MnistParams2.txt")
+    net.save_parameters("params/BluryMnistParams")
 
 
 
