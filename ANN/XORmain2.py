@@ -20,7 +20,7 @@ if __name__ == "__main__":
     finalResult = np.array([[[0]], [[1]], [[1]], [[0]]])
 
     #load parameters
-    net.load_parameters("XORparams.txt")
+    net.load_parameters("./params/XORparams")
 
     #making predictions
     predictions = net.predict(train)

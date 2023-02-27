@@ -43,7 +43,7 @@ if __name__ == "__main__":
     net.addLayer(Layer(16, 10))
 
     #load trained parameters
-    net.load_parameters("params/MnistParams.txt")
+    net.load_parameters("params/MnistParams")
 
     #making predictions
     n = 20
@@ -55,4 +55,3 @@ if __name__ == "__main__":
         print("expected : " + str((y_test[i]+1)/2) + ", predicted : " + str((predictions[i]+1)/2))
     
 
-#print("expected : " + str((y_test[i]+1)/2) + ", predicted : " + str((predictions[i]+1)/2))

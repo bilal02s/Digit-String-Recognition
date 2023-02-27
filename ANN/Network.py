@@ -51,25 +51,27 @@ class Network:
         return result
 
     def save_parameters(self, filename):
-        file = open(filename, 'w')
+        file = open(filename, 'wb')
         
         for layer in self.layers:
-            layer.weights.tofile(file, sep=' ')
-            layer.bias.tofile(file, sep=' ')
+            layer.weights.tofile(file)
+            layer.bias.tofile(file)
 
         file.close()
 
     def load_parameters(self, filename):
-        file = open(filename, 'r')
+        file = open(filename, 'rb')
 
         for layer in self.layers:
             weightsCount = layer.weights.size
             biasCount = layer.bias.size
 
-            weights = np.fromfile(file, count=weightsCount, sep=' ').reshape(layer.weights.shape)
-            bias = np.fromfile(file, count=biasCount, sep=' ').reshape(layer.bias.shape)
+            weights = np.fromfile(file, count=weightsCount).reshape(layer.weights.shape)
+            bias = np.fromfile(file, count=biasCount).reshape(layer.bias.shape)
 
             layer.weights = weights
             layer.bias = bias
+        
+        file.close()
 
         

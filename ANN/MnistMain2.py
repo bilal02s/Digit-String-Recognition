@@ -55,5 +55,5 @@ if __name__ == "__main__":
         print("expected : " + str(y_test[i]) + ", predicted : " + str(predictions[i]))
     
     #save parameters
-    net.save_parameters("params/MnistParams7.txt")
+    net.save_parameters("params/MnistParams")
 
