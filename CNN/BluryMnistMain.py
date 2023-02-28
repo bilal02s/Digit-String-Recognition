@@ -30,8 +30,7 @@ if __name__ == "__main__":
     # reshape and normalize input data
     print("manipulating data")
     x_train = x_train.astype('float32')
-    x_train = x_train/128 - 1.0
-    #x_train = modify_data(x_train)
+    x_train = modify_data(x_train)
     x_train = [[sample] for sample in x_train]
 
     # encode output which is a number in range [0,9] into a vector of size 10
@@ -41,7 +40,6 @@ if __name__ == "__main__":
 
     # same for test data : 10000 samples
     x_test = x_test.astype('float32')
-    x_test = x_test/128 - 1.0
     x_test = modify_data(x_test)
     x_test = [[sample] for sample in x_test]
 
@@ -66,9 +64,10 @@ if __name__ == "__main__":
 
     #train the network
     net.fit(x_train, y_train, generation=35, learning_rate=0.1, printOn=1)
+    #net.load_parameters("params/BluryMnistParams")
 
     #making predictions
-    n = 5
+    n = 20
     predictions = net.predict(x_test[0:n])
 
     #display predictions
