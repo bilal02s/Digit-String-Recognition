@@ -26,3 +26,9 @@ def add_padding(matrix, output_shape):
     right_padding = col_total_padding - left_padding 
 
     return np.pad(matrix, ((top_padding, bottom_padding), (left_padding, right_padding)), mode='constant')
+
+def get_prediction(probabilities):
+    if probabilities.max() < 0.1:
+        return None
+    
+    return np.argmax(probabilities)
