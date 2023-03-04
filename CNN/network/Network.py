@@ -16,6 +16,10 @@ class Network:
         layer.setActivationFunction(self.activation, self.activation_prime)
         self.layers.append(layer)
 
+    def reset(self):
+        for layer in self.layers:
+            layer.reset()
+
     def fit(self, train, result, generation=1000, learning_rate=0.1, printOn=100):
         n = len(train)
         error_value = 0

@@ -7,6 +7,10 @@ class Layer:
         self.input_size = input_size
         self.output_size = output_size
 
+    def reset(self):
+        self.weights = np.random.rand(self.input_size, self.output_size) - 0.5
+        self.bias = np.random.rand(1, self.output_size) - 0.5
+
     def getInputSize(self):
         return self.input_size
 

@@ -11,3 +11,6 @@ class FlattenLayer:
 
     def setActivationFunction(self, activation, activation_prime):
         return None
+    
+    def reset(self):
+        return None
