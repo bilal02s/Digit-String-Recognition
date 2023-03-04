@@ -13,3 +13,9 @@ def tanh(x):
 
 def tanh_prime(x):
     return 1-np.tanh(x)**2;
+
+def accuracy(predictions, true_result):
+    predictions = np.argmax(predictions, axis=1)
+    true_result = np.argmax(true_result, axis=1)
+    
+    return np.mean(predictions == true_result)

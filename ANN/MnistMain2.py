@@ -38,13 +38,12 @@ if __name__ == "__main__":
     net.setActivationFunction(util.tanh, util.tanh_prime)
 
     #adding two layers
-    net.addLayer(Layer(28*28, 16))
-    net.addLayer(Layer(16, 16))
-    net.addLayer(Layer(16, 10))
+    net.addLayer(Layer(28*28, 100))
+    net.addLayer(Layer(100, 30))
+    net.addLayer(Layer(30, 10))
 
     #training the network
-    #net.load_parameters("params/MnistParams4.txt")
-    net.fit(x_train, y_train, generation=100, learning_rate=0.1, printOn=1)
+    net.fit(x_train, y_train, generation=35, learning_rate=0.1, printOn=1)
 
     #making predictions
     n = 20
@@ -55,5 +54,5 @@ if __name__ == "__main__":
         print("expected : " + str(y_test[i]) + ", predicted : " + str(predictions[i]))
     
     #save parameters
-    net.save_parameters("params/MnistParams")
+    net.save_parameters("params/MnistParams2")
 
