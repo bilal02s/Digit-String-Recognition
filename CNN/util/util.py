@@ -32,3 +32,9 @@ def get_prediction(probabilities):
         return None
     
     return np.argmax(probabilities)
+
+def accuracy(predictions, true_result):
+    predictions = np.argmax(predictions, axis=1)
+    true_result = np.argmax(true_result, axis=1)
+    
+    return np.mean(predictions == true_result)

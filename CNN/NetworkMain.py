@@ -44,12 +44,13 @@ if __name__ == "__main__":
     net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(3*14*14, 100))
-    net.addLayer(Layer(100, 50))
-    net.addLayer(Layer(50, 10))
+    net.addLayer(Layer(3*14*14, 250))
+    net.addLayer(Layer(250, 100))
+    net.addLayer(Layer(100, 20))
+    net.addLayer(Layer(20, 10))
 
     #train the network
-    net.fit(x_train, y_train, generation=35, learning_rate=0.1, printOn=1)
+    net.fit(x_train, y_train, generation=35, learning_rate=0.075, printOn=1)
     
     #making predictions
     n = 10
@@ -61,7 +62,4 @@ if __name__ == "__main__":
     
     #save parameters
     net.save_parameters("params/MnistParams")
-
-
-
      
