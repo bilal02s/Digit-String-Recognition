@@ -58,14 +58,13 @@ if __name__ == "__main__":
     net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(3*21*21, 16))
-    net.addLayer(Layer(16, 16))
-    net.addLayer(Layer(16, 10))
+    net.addLayer(Layer(3*21*21, 500))
+    net.addLayer(Layer(500, 200))
+    net.addLayer(Layer(200, 50))
+    net.addLayer(Layer(50, 10))
 
     #train the network
-    net.load_parameters("params/BluryMnistParams")
-    net.fit(x_train, y_train, generation=15, learning_rate=0.1, printOn=1)
-    #net.load_parameters("params/BluryMnistParams")
+    net.fit(x_train, y_train, generation=50, learning_rate=0.075, printOn=1)
 
     #making predictions
     n = 20
@@ -76,7 +75,34 @@ if __name__ == "__main__":
         print("expected : " + str(y_test[i]) + ", predicted : " + str(predictions[i]))
     
     #save parameters
-    net.save_parameters("params/BluryMnistParams")
+    net.save_parameters("params/BluryMnistParams7")
+
+    net = Network()
+
+    #setting the error and activation functions
+    net.setErrorFunction(util.mse, util.mse_prime)
+    net.setActivationFunction(util.tanh, util.tanh_prime)
+
+    #add layers
+    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
+    net.addLayer(MaxPooling(kernels.one, stride=2))
+    net.addLayer(FlattenLayer())
+    net.addLayer(Layer(3*21*21, 500))
+    net.addLayer(Layer(500, 250))
+    net.addLayer(Layer(250, 100))
+    net.addLayer(Layer(100, 20))
+    net.addLayer(Layer(20, 10))
+
+    net.fit(x_train, y_train, generation=50, learning_rate=0.075, printOn=1)
+    net.save_parameters("params/BluryMnistParams8")
+
+    n = 20
+    predictions = net.predict(x_test[0:n])
+
+    #display predictions
+    #for i in range(n):
+    #    print("expected : " + str(y_test[i]) + ", predicted : " + str(predictions[i]))
+
 
 
 
