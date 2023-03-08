@@ -18,7 +18,9 @@ def modify_data(matrices):
 
     for matrix in matrices:
         [blurred] = blur.forward_propagation([matrix])
-        final = util.add_padding(blurred, (int(blurred.shape[0]*2), int(blurred.shape[1]*2)))
+        padded = util.add_padding(blurred, (int(blurred.shape[0]*1.5), int(blurred.shape[1]*1.5)))
+        noise = np.random.randn(42, 42)*0.05*255
+        final = np.clip(padded + noise, 0, 255)
         modified.append(final)
 
     return modified
@@ -48,7 +50,7 @@ if __name__ == "__main__":
     conv = ConvLayer([kernels.vertical])
     maxpool = MaxPooling(kernels.one, 2)
     flatten = FlattenLayer()
-
+    
     for i in range(0, 2): 
         #img = util.add_padding(train_X[i], (56, 56)) 
         pyplot.subplot(330 + 1)
