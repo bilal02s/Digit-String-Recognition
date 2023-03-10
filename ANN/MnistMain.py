@@ -38,12 +38,13 @@ if __name__ == "__main__":
     net.setActivationFunction(util.tanh, util.tanh_prime)
 
     #adding two layers
-    net.addLayer(Layer(28*28, 100))
-    net.addLayer(Layer(100, 30))
-    net.addLayer(Layer(30, 10))
+    net.addLayer(Layer(28*28, 250))
+    net.addLayer(Layer(250, 100))
+    net.addLayer(Layer(100, 20))
+    net.addLayer(Layer(20, 10))
 
     #load trained parameters
-    net.load_parameters("params/MnistParams2")
+    net.load_parameters("params/MnistParams")
 
     #making predictions
     n = 20
