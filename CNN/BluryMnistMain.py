@@ -67,7 +67,7 @@ if __name__ == "__main__":
     net.fit(x_train, y_train, generation=50, learning_rate=0.075, printOn=1)
 
     #making predictions
-    n = 20
+    n = 5
     predictions = net.predict(x_test[0:n])
 
     #display predictions
