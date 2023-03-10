@@ -41,13 +41,13 @@ if __name__ == "__main__":
     net.setActivationFunction(util.tanh, util.tanh_prime)
 
     #add layers
-    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
+    net.addLayer(ConvLayer([kernels.horizontaln, kernels.verticaln, kernels.diagonaln, kernels.diagonal2n]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(3*14*14, 250))
-    net.addLayer(Layer(250, 100))
-    net.addLayer(Layer(100, 20))
-    net.addLayer(Layer(20, 10))
+    net.addLayer(Layer(4*14*14, 300))
+    net.addLayer(Layer(300, 120))
+    net.addLayer(Layer(120, 25))
+    net.addLayer(Layer(25, 10))
 
     #train the network
     net.fit(x_train, y_train, generation=35, learning_rate=0.075, printOn=1)

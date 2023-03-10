@@ -38,13 +38,13 @@ if __name__ == "__main__":
     net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(4*14*14, 250))
-    net.addLayer(Layer(250, 100))
-    net.addLayer(Layer(100, 20))
-    net.addLayer(Layer(20, 10))
+    net.addLayer(Layer(4*14*14, 300))
+    net.addLayer(Layer(300, 120))
+    net.addLayer(Layer(120, 25))
+    net.addLayer(Layer(25, 10))
 
     #train the network
-    net.load_parameters("params/MnistParams3")
+    net.load_parameters("params/MnistParams")
 
     #making predictions
     n = 10
@@ -61,8 +61,8 @@ if __name__ == "__main__":
         pyplot.imshow(x_test[i][0], cmap=pyplot.get_cmap('gray'))
         pyplot.text(10*(j%2), 70, "expected : " + str(expected) + ", predicted : " + str(predicted))
 
-        if j%2 == 1:
-            pyplot.show()
+        #if j%2 == 1:
+         #   pyplot.show()
 
     all_predictions = np.array(net.predict(x_test))
     accuracy = util.accuracy(all_predictions.reshape((len(y_test), 10)), y_test)
