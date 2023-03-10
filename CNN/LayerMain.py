@@ -47,12 +47,11 @@ if __name__ == "__main__":
     y_test = np_utils.to_categorical(y_test)
     y_test = y_test * 2 - 1
 
-    conv = ConvLayer([kernels.vertical])
+    conv = ConvLayer([kernels.diagonal])
     maxpool = MaxPooling(kernels.one, 2)
     flatten = FlattenLayer()
     
     for i in range(0, 2): 
-        #img = util.add_padding(train_X[i], (56, 56)) 
         pyplot.subplot(330 + 1)
         pyplot.imshow(x_train[i], cmap=pyplot.get_cmap('gray'))
         img = train_X[i]
@@ -66,5 +65,5 @@ if __name__ == "__main__":
         pyplot.imshow(max, cmap=pyplot.get_cmap('gray'))
         [res] = flatten.forward_propagation([max])
         pyplot.subplot(330 + 1 +4)
-        pyplot.imshow(res.reshape((28, 28)), cmap=pyplot.get_cmap('gray'))
+        pyplot.imshow(res.reshape((21, 21)), cmap=pyplot.get_cmap('gray'))
         pyplot.show() 
