@@ -49,7 +49,7 @@ if __name__ == "__main__":
     net.setActivationFunction(util.tanh, util.tanh_prime)
 
     #add layers
-    net.addLayer(ConvLayer([kernels.horizontaln, kernels.verticaln, kernels.diagonaln]))
+    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
     net.addLayer(Layer(3*21*21, 500))
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     net.addLayer(Layer(50, 10))
 
     #train the network
-    net.load_parameters("params/NoisyMnistParams2")
+    net.load_parameters("params/NoisyMnistParams")
 
     #making predictions
     n = 10
@@ -75,8 +75,8 @@ if __name__ == "__main__":
         pyplot.imshow(x_test[i][0], cmap=pyplot.get_cmap('gray'))
         pyplot.text(10*(j%2), 70, "expected : " + str(expected) + ", predicted : " + str(predicted))
 
-        if j%2 == 1:
-            pyplot.show()
+        #if j%2 == 1:
+         #   pyplot.show()
 
     all_predictions = np.array(net.predict(x_test))
     accuracy = util.accuracy(all_predictions.reshape((len(y_test), 10)), y_test)
