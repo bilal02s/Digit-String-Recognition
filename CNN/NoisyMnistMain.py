@@ -58,16 +58,18 @@ if __name__ == "__main__":
     net.setActivationFunction(util.tanh, util.tanh_prime)
 
     #add layers
+    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2]))
+    net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(3*21*21, 500))
+    net.addLayer(Layer(12*10*10, 500))
     net.addLayer(Layer(500, 200))
     net.addLayer(Layer(200, 50))
     net.addLayer(Layer(50, 10))
 
     #train the network
-    net.fit(x_train, y_train, generation=50, learning_rate=0.075, printOn=1)
+    net.fit(x_train, y_train, generation=35, learning_rate=0.075, printOn=1)
 
     #making predictions
     n = 20

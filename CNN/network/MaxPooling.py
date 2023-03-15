@@ -1,5 +1,8 @@
 import numpy as np
 
+def even(x):
+    return (x//2)*2
+
 class MaxPooling:
     def __init__(self, kernel, stride):
         self.kernel = kernel
@@ -9,6 +12,8 @@ class MaxPooling:
         (rowK, colK) = kernel.shape
         (row, col) = matrix.shape
         out_row, out_col = int(row/self.stride), int(col/self.stride)
+
+        row, col = even(row), even(col)
 
         i0 = np.repeat(np.arange(rowK), colK)
         i1 = np.repeat(np.arange(0, row, self.stride), out_col)

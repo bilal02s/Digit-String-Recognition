@@ -37,11 +37,12 @@ if __name__ == "__main__":
     #add layers
     net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2]))
     net.addLayer(MaxPooling(kernels.one, stride=2))
+    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
+    net.addLayer(MaxPooling(kernels.one, stride=2))
     net.addLayer(FlattenLayer())
-    net.addLayer(Layer(4*14*14, 300))
-    net.addLayer(Layer(300, 120))
-    net.addLayer(Layer(120, 25))
-    net.addLayer(Layer(25, 10))
+    net.addLayer(Layer(12*7*7, 250))
+    net.addLayer(Layer(250, 50))
+    net.addLayer(Layer(50, 10))
 
     #train the network
     net.load_parameters("params/MnistParams")

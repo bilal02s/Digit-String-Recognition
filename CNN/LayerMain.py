@@ -19,7 +19,7 @@ def modify_data(matrices):
     for matrix in matrices:
         [blurred] = blur.forward_propagation([matrix])
         padded = util.add_padding(blurred, (int(blurred.shape[0]*1.5), int(blurred.shape[1]*1.5)))
-        noise = np.random.randn(42, 42)*0.05*255
+        noise = np.random.randn(42, 42)*0.1*255
         final = np.clip(padded + noise, 0, 255)
         modified.append(final)
 
