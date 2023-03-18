@@ -5,6 +5,7 @@ from PIL import Image
 
 import util.util as util
 import util.kernels as kernels
+from MatrixProcessing import MyMatrix
 from network.Network import Network
 from network.Layer import Layer
 from network.ConvLayer import ConvLayer
@@ -18,13 +19,14 @@ def modify_data(matrices):
     modified = []
 
     for matrix in matrices:
-        noise = np.random.randn(28, 28)*randint(0, 120)/1000*255
-        final = np.clip(matrix + noise, 0, 255)
-        noise = np.random.randn(28, 28)*randint(0, 120)/1000*255
-        image2 = np.clip(matrix + noise, 0, 255)
-        rotated = np.array(Image.fromarray(np.uint8(final)).rotate(randint(-15, 45)))
-        modified.append(final)
-        modified.append(rotated)
+        matrix1 = MyMatrix(matrix)
+        matrix2 = MyMatrix(matrix.copy())
+        matrix1.addRandomNoise(10).randomTransformation((-10, 0), ((-2, -2), (2, 2)))
+        r = randint(-6, 3)
+        matrix2.zoom((r, r, 28-r, 28-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(20).addRandomScratch(100)
+
+        modified.append(matrix1.getMatrix())
+        modified.append(matrix2.getMatrix())
 
     return modified
 
@@ -37,7 +39,6 @@ if __name__ == "__main__":
     # same for test data : 10000 samples
     x_test = x_test.astype('float32')
     x_test = modify_data(x_test)
-    print(x_test)
     x_test = np.array([[sample] for sample in x_test])
 
     y_test = np_utils.to_categorical(y_test)
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     net.addLayer(Layer(50, 10))
 
     #train the network
-    net.load_parameters("params/MnistParamsOnNoise")
+    net.load_parameters("params/ParamsGeneric")
 
     #making predictions
     n = 10
