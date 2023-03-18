@@ -45,7 +45,7 @@ if __name__ == "__main__":
     net.addLayer(Layer(50, 10))
 
     #train the network
-    net.load_parameters("params/MnistParams")
+    net.load_parameters("params/MnistParams3")
 
     #making predictions
     n = 10

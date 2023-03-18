@@ -2,6 +2,7 @@ __pycache__
 MnistParams2
 MnistParams3
 MnistParams4
+MnistParamsOld
 BluryMnistParams2
 BluryMnistParams3
 BluryMnistParams4
@@ -10,3 +11,4 @@ BluryMnistParams6
 BluryMnistParams7
 BluryMnistParams8
 BluryMnistParamsBig
+NoisyMnistParamsOld

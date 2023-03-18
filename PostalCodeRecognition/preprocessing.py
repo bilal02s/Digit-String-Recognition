@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot
 from PIL import Image
 from PIL import ImageOps
+from sklearn.metrics import confusion_matrix
 
 import util.util as util
 import util.kernels as kernels
@@ -10,19 +11,6 @@ from network.Layer import Layer
 from network.ConvLayer import ConvLayer
 from network.MaxPooling import MaxPooling
 from network.FlattenLayer import FlattenLayer
-
-def modify_data(matrices):
-    blur = ConvLayer([kernels.gaussian_blur])
-    modified = []
-
-    for matrix in matrices:
-        [blurred] = blur.forward_propagation([matrix])
-        padded = util.add_padding(blurred, (int(blurred.shape[0]*1.5), int(blurred.shape[1]*1.5)))
-        noise = np.random.randn(42, 42)*0.1*255
-        final = np.clip(padded + noise, 0, 255)
-        modified.append(final)
-
-    return modified
 
 if __name__ == "__main__":
     #create the network
@@ -43,9 +31,10 @@ if __name__ == "__main__":
     net.addLayer(Layer(50, 10))
 
     #train the network
-    net.load_parameters("params/MnistParams2conv")
+    net.load_parameters("params/ParamsGeneric")
 
     #make predictions
+    all_preds = []
     x = 6
     for digit in range(10):
         data = []
@@ -58,15 +47,16 @@ if __name__ == "__main__":
             image = np.array(ImageOps.invert(Image.open(path).convert('L').resize((28, 28)))).astype('float32')
             min, max = np.quantile(image, 0.25), image.max()
             image = np.dot(image, np.diag(np.repeat(255/(max-min), 28))) + np.repeat((255*min)/(min-max), 28).reshape((-1, 1))
-            image = np.clip(image, 0, 255)
+            image = np.clip(image, 0, 255) 
             data.append([image])
         data = np.array(data)
 
         all_predictions = np.array(net.predict(data))
+        all_preds += list(np.argmax(all_predictions.reshape((len(y_test), 10)), axis=1).reshape(-1))
         accuracy = util.accuracy(all_predictions.reshape((len(y_test), 10)), y_test)
         print("digit " + str(digit) + ", accuracy : " + str(accuracy))
 
-        n = 10
+        n = 6
         indices = np.random.randint(0, len(data), n)
         predictions = net.predict(data[indices])
 
@@ -81,5 +71,10 @@ if __name__ == "__main__":
             pyplot.imshow(data[i][0], cmap=pyplot.get_cmap('gray'))
             pyplot.text(10*(j%2), 70, "expected : " + str(expected) + ", predicted : " + str(predicted))
 
-            #if j%2 == 1:
-             #  pyplot.show()
+            if j%2 == 1:
+               pyplot.show()
+
+    y_true = np.array([i for i in range(10) for j in range(1000)])
+    classes = [i for i in range(10)]
+    conf_matrix = confusion_matrix(all_preds, y_true)
+    print(conf_matrix)
