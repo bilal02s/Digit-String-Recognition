@@ -2,6 +2,10 @@ import numpy as np
 from matplotlib import pyplot
 from PIL import Image
 from PIL import ImageOps
+from PIL.ImageFilter import (
+   BLUR, CONTOUR, DETAIL, EDGE_ENHANCE, EDGE_ENHANCE_MORE,
+   EMBOSS, FIND_EDGES, SMOOTH, SMOOTH_MORE, SHARPEN
+)
 from sklearn.metrics import confusion_matrix
 
 import util.util as util
@@ -11,6 +15,8 @@ from network.Layer import Layer
 from network.ConvLayer import ConvLayer
 from network.MaxPooling import MaxPooling
 from network.FlattenLayer import FlattenLayer
+
+from preprocessing import filterMatrix
 
 if __name__ == "__main__":
     #create the network
@@ -31,7 +37,7 @@ if __name__ == "__main__":
     net.addLayer(Layer(50, 10))
 
     #train the network
-    net.load_parameters("params/ParamsGeneric")
+    net.load_parameters("params/ParamsGeneric2")
 
     #make predictions
     all_preds = []
@@ -44,10 +50,11 @@ if __name__ == "__main__":
         for i in range(1, 1001): 
             index = i
             path = 'data/' + str(digit) + '/' + str(digit) + '_' + str(index) + '.jpg'
-            image = np.array(ImageOps.invert(Image.open(path).convert('L').resize((28, 28)))).astype('float32')
+            image = np.array(ImageOps.invert(Image.open(path).convert('L').resize((28, 28)).filter(SHARPEN))).astype('float32')
             min, max = np.quantile(image, 0.25), image.max()
             image = np.dot(image, np.diag(np.repeat(255/(max-min), 28))) + np.repeat((255*min)/(min-max), 28).reshape((-1, 1))
             image = np.clip(image, 0, 255) 
+            image = filterMatrix(image)
             data.append([image])
         data = np.array(data)
 
@@ -71,8 +78,8 @@ if __name__ == "__main__":
             pyplot.imshow(data[i][0], cmap=pyplot.get_cmap('gray'))
             pyplot.text(10*(j%2), 70, "expected : " + str(expected) + ", predicted : " + str(predicted))
 
-            if j%2 == 1:
-               pyplot.show()
+            #if j%2 == 1:
+             #  pyplot.show()
 
     y_true = np.array([i for i in range(10) for j in range(1000)])
     classes = [i for i in range(10)]

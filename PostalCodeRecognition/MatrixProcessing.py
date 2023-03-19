@@ -3,6 +3,10 @@ from PIL import Image
 from PIL import ImageOps
 from random import randint
 from random import random
+from PIL.ImageFilter import (
+   BLUR, CONTOUR, DETAIL, EDGE_ENHANCE, EDGE_ENHANCE_MORE,
+   EMBOSS, FIND_EDGES, SMOOTH, SMOOTH_MORE, SHARPEN, GaussianBlur
+)
 
 class MyMatrix:
     def __init__(self, matrix):
@@ -56,6 +60,12 @@ class MyMatrix:
             im = MyMatrix(scratch.copy())
             im.transform(angle=randint(0, 359))
             self.matrix = np.max((self.matrix, im.getMatrix()), axis=0)
+        
+        return self
+
+    def blur(self):
+        self.matrix = np.array(Image.fromarray(np.uint8(self.matrix)).filter(GaussianBlur(0.65))).astype('float32')
+        return self
 
 
         

@@ -23,7 +23,7 @@ def modify_data(matrices):
         matrix2 = MyMatrix(matrix.copy())
         matrix1.addRandomNoise(10).randomTransformation((-10, 0), ((-2, -2), (2, 2)))
         r = randint(-6, 3)
-        matrix2.zoom((r, r, 28-r, 28-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(20).addRandomScratch(100)
+        matrix2.zoom((r, r, 28-r, 28-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(5).addRandomScratch(150).blur()
 
         modified.append(matrix1.getMatrix())
         modified.append(matrix2.getMatrix())
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     count = 0
     max = 10
     for i in range(0, 100):
-        if np.argmax(y_train[i]) == digit:
+        if np.argmax(y_train[i]) == digit or True:
             count += 1
             pyplot.subplot(330 + 1)
             pyplot.imshow(x_train[i], cmap=pyplot.get_cmap('gray'))
