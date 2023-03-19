@@ -16,7 +16,7 @@ from network.ConvLayer import ConvLayer
 from network.MaxPooling import MaxPooling
 from network.FlattenLayer import FlattenLayer
 
-from preprocessing import filterMatrix
+from TestPreprocessing import filterMatrix
 
 if __name__ == "__main__":
     #create the network
