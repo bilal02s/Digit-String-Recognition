@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # training data : 60000 samples
     # reshape and normalize input data
     x_train = x_train.astype('float32')
-    x_train = [[sample] for sample in x_train]
+    x_train = x_train.reshape(x_train.shape[0], 1, 28, 28)
 
     # encode output which is a number in range [0,9] into a vector of size 10
     # e.g. number 3 will become [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     # same for test data : 10000 samples
     x_test = x_test.astype('float32')
-    x_test = [[sample] for sample in x_test]
+    x_test = x_test.reshape(x_test.shape[0], 1, 28, 28)
 
     y_test = np_utils.to_categorical(y_test)
     y_test = y_test * 2 - 1
@@ -41,10 +41,10 @@ if __name__ == "__main__":
     net.setActivationFunction(util.tanh, util.tanh_prime)
 
     #add layers
-    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2]))
-    net.addLayer(MaxPooling(kernels.one, stride=2))
-    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
-    net.addLayer(MaxPooling(kernels.one, stride=2))
+    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2], (28, 28)))
+    net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(28, 28)))
+    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal], (14, 14)))
+    net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(14, 14)))
     net.addLayer(FlattenLayer())
     net.addLayer(Layer(12*7*7, 250))
     net.addLayer(Layer(250, 50))

@@ -4,14 +4,15 @@ def even(x):
     return (x//2)*2
 
 class MaxPooling:
-    def __init__(self, kernel, stride):
+    def __init__(self, kernel, stride, input_shape):
         self.kernel = kernel
         self.stride = stride
+        self.input_shape = input_shape
 
-    def apply_kernel(self, matrix, kernel):
         (rowK, colK) = kernel.shape
-        (row, col) = matrix.shape
+        (row, col) = input_shape
         out_row, out_col = int(row/self.stride), int(col/self.stride)
+        self.out_row, self.out_col = out_row, out_col
 
         row, col = even(row), even(col)
 
@@ -19,19 +20,14 @@ class MaxPooling:
         i1 = np.repeat(np.arange(0, row, self.stride), out_col)
         j0 = np.tile(np.arange(colK), rowK)
         j1 = np.tile(np.arange(0, col, self.stride), out_row)
-        i = i0.reshape((-1, 1)) + i1.reshape((1, -1))
-        j = j0.reshape((-1, 1)) + j1.reshape((1, -1))
-
-        transformed_image = matrix[i, j]
-        output = (kernel.reshape((-1, 1)) * transformed_image).max(axis=0).reshape((out_row, out_col))
-
-        return output
+        self.transI = i0.reshape((-1, 1)) + i1.reshape((1, -1))
+        self.transJ = j0.reshape((-1, 1)) + j1.reshape((1, -1))
 
     def forward_propagation(self, matrices):
         output = []
 
-        for matrix in matrices:
-            output.append(self.apply_kernel(matrix, self.kernel))
+        trans_matrices = matrices[:, self.transI, self.transJ]
+        output = (self.kernel.reshape((-1, 1)) * trans_matrices).max(axis=1).reshape((matrices.shape[0], self.out_row, self.out_col))
 
         return output
 
