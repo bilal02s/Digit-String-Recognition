@@ -58,9 +58,7 @@ class Network:
         file = open(filename, 'wb')
         
         for layer in self.layers:
-            if hasattr(layer, "weights") and hasattr(layer, "weights"):
-                layer.weights.tofile(file)
-                layer.bias.tofile(file)
+            layer.save_parameters(file)
 
         file.close()
 
@@ -68,16 +66,8 @@ class Network:
         file = open(filename, 'rb')
 
         for layer in self.layers:
-            if (not hasattr(layer, "weights")) or (not hasattr(layer, "weights")):
-                continue 
+            layer.load_parameters(file)
 
-            weightsCount = layer.weights.size
-            biasCount = layer.bias.size
-
-            weights = np.fromfile(file, count=weightsCount).reshape(layer.weights.shape)
-            bias = np.fromfile(file, count=biasCount).reshape(layer.bias.shape)
-
-            layer.weights = weights
-            layer.bias = bias
+        file.close()
 
         

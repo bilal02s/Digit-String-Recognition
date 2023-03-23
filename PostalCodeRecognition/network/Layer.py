@@ -43,3 +43,13 @@ class Layer:
 
         return self.input_err
         
+    def save_parameters(self, file):
+        self.weights.tofile(file)
+        self.bias.tofile(file)
+
+    def load_parameters(self, file):
+        weightsCount = self.weights.size
+        biasCount = self.bias.size
+
+        self.weights = np.fromfile(file, count=weightsCount).reshape(self.weights.shape)
+        self.bias = np.fromfile(file, count=biasCount).reshape(self.bias.shape)

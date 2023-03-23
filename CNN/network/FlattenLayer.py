@@ -10,6 +10,12 @@ class FlattenLayer:
 
     def setActivationFunction(self, activation, activation_prime):
         return None
+
+    def save_parameters(self, file):
+        return None
+
+    def load_parameters(self, file):
+        return None
     
     def reset(self):
         return None
