@@ -1,7 +1,7 @@
 import numpy as np
-from network.Layer import Layer
-from network.Network import Network
-import network.util as util
+from MLTools.network.Layer import Layer
+from MLTools.network.Network import Network
+from MLTools.network import util
 
 if __name__ == "__main__":
     #create the network
