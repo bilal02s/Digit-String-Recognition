@@ -1,5 +1,5 @@
 import numpy as np
-import network.util as util
+from . import util
 
 class Network:
     """
@@ -51,8 +51,21 @@ class Network:
                 the layer to be added to the network
         """
         self.layers.append(layer)
+    
+    def setLayers(self, layers):
+        """
+        Set layers to the network
+        the ordering of layers is import, each layer's input size needs to be equal to the output size of
+        its previous layer, and each layer's output size needs to be equal to the input size of its next layer.
 
-    def fit(self, train, result, loss, generation, learning_rate):
+        Parameters
+        ----------
+            layers : list
+                the layers to be setted to the network
+        """
+        self.layers = layers
+
+    def fit(self, train, result, loss, generation, learning_rate, display=True):
         """
         Train the network on the given training set for a given number of epochs at a determined learning rate.
 
@@ -85,7 +98,9 @@ class Network:
                     error = layer.backpropagation(error, learning_rate/(gen+1))
 
             error_value /= n
-            print("gen : " + str(gen) + ", error : " + str(error_value))
+
+            if display:
+                print("gen : " + str(gen) + ", error : " + str(error_value))
 
     def predict(self, toPredict):
         """

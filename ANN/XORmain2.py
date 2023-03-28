@@ -8,8 +8,10 @@ if __name__ == "__main__":
     net = Network()
 
     #adding two layers
-    net.addLayer(Layer(2, 3, activation='sigmoid'))
-    net.addLayer(Layer(3, 1, activation='sigmoid'))
+    net.setLayers([
+        Layer(2, 3, activation='tanh'),
+        Layer(3, 1, activation='tanh')
+    ])
 
     #creating the training data
     train = np.array([[[0, 0]],[[0, 1]],[[1, 0]],[[1, 1]]])

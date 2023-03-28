@@ -1,22 +1,22 @@
 import numpy as np
-from network.Layer import Layer
-from network.Network import Network
-import network.util as util
+from .network import Layer, Network, util
 
 if __name__ == "__main__":
     #create the network
     net = Network()
 
     #adding two layers
-    net.addLayer(Layer(2, 3, activation='sigmoid'))
-    net.addLayer(Layer(3, 1, activation='sigmoid'))
+    net.setLayers([
+        Layer(2, 3, activation='tanh'),
+        Layer(3, 1, activation='tanh')
+    ])
 
     #creating the training data
-    train = np.array([[[0, 0]],[[0, 1]],[[1, 0]],[[1, 1]]])
-    finalResult = np.array([[[0]], [[1]], [[1]], [[0]]])
+    train = np.array([[[-1, -1]],[[-1, 1]],[[1, -1]],[[1, 1]]])
+    finalResult = np.array([[[-1]], [[1]], [[1]], [[-1]]])
 
     #training the network
-    net.fit(train, finalResult, loss='mse', generation=100, learning_rate=0.1)
+    net.fit(train, finalResult, loss='mse', generation=1000, learning_rate=0.1)
 
     #making predictions
     predictions = net.predict(train)

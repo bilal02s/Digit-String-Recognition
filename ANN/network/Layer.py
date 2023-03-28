@@ -1,5 +1,5 @@
 import numpy as np
-import network.util as util
+from . import util
 
 class Layer:
     """

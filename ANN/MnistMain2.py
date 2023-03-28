@@ -36,10 +36,12 @@ if __name__ == "__main__":
     net = Network()
 
     #adding two layers
-    net.addLayer(Layer(28*28, 250, activation='tanh'))
-    net.addLayer(Layer(250, 100, activation='tanh'))
-    net.addLayer(Layer(100, 20, activation='tanh'))
-    net.addLayer(Layer(20, 10, activation='tanh'))
+    net.setLayers([
+        Layer(28*28, 250, activation='tanh'),
+        Layer(250, 100, activation='tanh'),
+        Layer(100, 20, activation='tanh'),
+        Layer(20, 10, activation='tanh')
+    ])
 
     #load trained parameters
     net.load_parameters("params/MnistParams3")
