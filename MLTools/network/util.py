@@ -1,4 +1,5 @@
 import numpy as np
+from random import randint
 
 # Mean Squared Error and its derivative
 def mse(prediction, expected):
@@ -26,6 +27,30 @@ def sigmoid(x):
 def sigmoid_prime(x):
     '''Applies the derivative of sigmoid to all elements of a given vector/matrix, returns the result'''
     return sigmoid(x) * (1-sigmoid(x))
+
+# add random padding to an array of 2d-matrices
+def add_padding(matrices, output_shape):
+    ''' Add random padding to the matrices, to have the desired output shape, returns padded matrices '''
+    dim, row, col = matrices.shape 
+    out_row, out_col = output_shape 
+
+    row_total_padding = out_row - row
+    col_total_padding = out_col - col
+
+    top_padding = randint(0, row_total_padding)
+    left_padding = randint(0, col_total_padding)
+    bottom_padding = row_total_padding - top_padding
+    right_padding = col_total_padding - left_padding 
+
+    return np.pad(matrices, ((0, 0), (top_padding, bottom_padding), (left_padding, right_padding)), mode='constant')
+
+def get_prediction(probabilities):
+    ''' Returns the index of the highest probability element from the probabilities vector '''
+    if probabilities.max() < 0.1:
+        return None
+    
+    return np.argmax(probabilities)
+
 
 # accuracy function
 def accuracy(predictions, true_result):

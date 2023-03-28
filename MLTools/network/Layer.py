@@ -47,7 +47,7 @@ class Layer:
     load_parameters(file):
         load parameters into this layer's weights and bias from binary file given in parameter
     """
-    def __init__(self, input_size, output_size, activation='tanh'):
+    def __init__(self, input_size, output_size, activation):
         """
         Initialise weights and bias matrices of the specified shapes with random values.
         set other attributes as necessary.
@@ -58,11 +58,11 @@ class Layer:
                 size of the layer's input
             output_size : int
                 size of the layer's output
-            activation : str, optional
-                the name of the activation function to use, (default is tanh)
+            activation : str
+                the name of the activation function to use
         """
         self.weights = np.random.default_rng().normal(0, 1/np.sqrt(input_size), size=(input_size, output_size))
-        self.bias = np.repeat(0, output_size).reshape(1, output_size).astype('float64')
+        self.bias = np.repeat(0.0, output_size).reshape(1, output_size)
         self.input_size = input_size
         self.output_size = output_size
         self.activation, self.activation_prime = util.get_activation_function(activation)
