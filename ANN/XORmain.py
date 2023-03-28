@@ -28,4 +28,4 @@ if __name__ == "__main__":
         print("data : " + str(train[i]) + ", expected : " + str(finalResult[i]) + ", predicted : " + str(predictions[i]))
         
     #save parameters
-    net.save_parameters("./params/XORparams2")
+    net.save_parameters("./params/XORparams")

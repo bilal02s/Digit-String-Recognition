@@ -44,7 +44,7 @@ if __name__ == "__main__":
     ])
 
     #load trained parameters
-    net.load_parameters("params/MnistParams3")
+    net.load_parameters("params/MnistParams2")
 
     #making predictions
     n = 20
