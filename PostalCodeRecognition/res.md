@@ -1,5 +1,6 @@
 1. network trained on MNIST original data, tested on unprocessed images.
-    * **Structure:** conv (4 kernel) > 4\*14\*14 > 300 > 120 > 25 > 10
+    * **Structure:** conv (4 kernel) > MaxPooling > 4\*14\*14 > 300 > 120 > 25 > 10
+    * **Kernels:** vertical, horizontal, diagonal, opposite diagonal
     * **Results:** 
         * digit 0, accuracy : 0.587
         * digit 1, accuracy : 0.282
@@ -13,7 +14,10 @@
         * digit 9, accuracy : 0.088
 
 2. network trained on MNIST original data, tested on unprocessed images.
-    * **Structure:** conv (4 kernel) > conv (3 kernel) > 12\*7\*7 > 250 > 50 > 10
+    * **Structure:** conv (4 kernel) > MaxPooling > conv (3 kernel) > MaxPooling > 12\*7\*7 > 250 > 50 > 10
+    * **Kernels:** 
+        * ConvLayer 1: vertical, horizontal, diagonal, opposite diagonal
+        * ConvLayer 2: vertical, horizontal, diagonal
     * **Results:**
         * digit 0, accuracy : 0.448
         * digit 1, accuracy : 0.47
@@ -27,7 +31,10 @@
         * digit 9, accuracy : 0.018
 
 3. network trained on MNIST original data, tested on images processed slightly.
-    * **Structure:** conv (4 kernel) > conv (3 kernel) > 12\*7\*7 > 250 > 50 > 10
+    * **Structure:** conv (4 kernel) > MaxPooling > conv (3 kernel) > MaxPooling > 12\*7\*7 > 250 > 50 > 10
+    * **Kernels:** 
+        * ConvLayer 1: vertical, horizontal, diagonal, opposite diagonal
+        * ConvLayer 2: vertical, horizontal, diagonal
     * **Test image (DIDA) processing:** removing background light (background pixels => 0)
     * **Results:**
         * digit 0, accuracy : 0.488
@@ -44,7 +51,10 @@
 4. network trained on MNIST images with different noise levels added.
     * **Train image processing:**
         * Noise: gaussian noise, mean=0, standard deviation=25
-    * **Structure:** conv (4 kernel) > conv (3 kernel) > 12\*7\*7 > 250 > 50 > 10
+    * **Structure:** conv (4 kernel) > MaxPooling > conv (3 kernel) > MaxPooling > 12\*7\*7 > 250 > 50 > 10
+    * **Kernels:** 
+        * ConvLayer 1: vertical, horizontal, diagonal, opposite diagonal
+        * ConvLayer 2: vertical, horizontal, diagonal
     * **Test image (DIDA) processing:** the same as the step before.
     * **Results:**
         * digit 0, accuracy : 0.584
@@ -64,7 +74,10 @@
         * Noise: gaussian noise, mean=0, standard deviation=25
     * **Results on MNIST test images:**
         * accuracy : 0.955
-    * **Structure:** conv (4 kernel) > conv (3 kernel) > 12\*7\*7 > 250 > 50 > 10
+    * **Structure:** conv (4 kernel) > MaxPooling > conv (3 kernel) > MaxPooling > 12\*7\*7 > 250 > 50 > 10
+    * **Kernels:** 
+        * ConvLayer 1: vertical, horizontal, diagonal, opposite diagonal
+        * ConvLayer 2: vertical, horizontal, diagonal
     * **Test image (DIDA) processing:** the same as the step before.
     * **Results:**
         * digit 0, accuracy : 0.512
@@ -123,7 +136,10 @@
     * **Results on Mnist test images**:
         * Mnist original test images: accuracy=0.952
         * MNist augmented test images (20k test image): accuracy=0.83
-    * **Structure:** conv (4 kernel) > conv (3 kernel) > 12\*7\*7 > 250 > 50 > 10
+    * **Structure:** conv (4 kernel) > MaxPooling > conv (3 kernel) > MaxPooling > 12\*7\*7 > 250 > 50 > 10
+    * **Kernels:** 
+        * ConvLayer 1: vertical, horizontal, diagonal, opposite diagonal
+        * ConvLayer 2: vertical, horizontal, diagonal
     * **Test image (DIDA) processing:** same processing as the step before.
     * **Results:**
         * digit 0, accuracy : 0.737
@@ -150,7 +166,10 @@
 
 7. network trained on MNIST image modified with variety of techniques to simulate real world test images.
     * **Train image processing:** the same training set as the step before
-    * **Structure:** conv (4 kernel) > conv (3 kernel) > 12\*7\*7 > 250 > 50 > 10
+    * **Structure:** conv (4 kernel) > MaxPooling > conv (3 kernel) > MaxPooling > 12\*7\*7 > 250 > 50 > 10
+    * **Kernels:** 
+        * ConvLayer 1: vertical, horizontal, diagonal, opposite diagonal
+        * ConvLayer 2: vertical, horizontal, diagonal
     * **Test image (DIDA) processing:** 
         * Same processing as the step before (rescaling intensities between 0 and 255, removing background light).
         * Filtering images :
@@ -178,3 +197,72 @@
         [ 28  15  22  62  33  59   5 608   7 322] <br/>
         [ 20   7 344 158   6 162  48  38 683  45] <br/>
         [ 11   1  51  97   6  63   6  53  32 244]] <br/>
+
+8. network trained on MNIST image modified with variety of techniques to simulate real world test images.
+    * **Train image processing:** the same training set as the step before
+    * **Structure:** conv (8 kernel) > MaxPooling > conv (4 kernel) > MaxPooling > 12\*5\*5 > 250 > 80 > 10
+    * **Padding:** Valid padding was used to help reduce further the dimentionality
+    * **Kernels:** This network implemented backpropagation to learn its convolutinal layer's kernels
+    * **Test image (DIDA) processing:** 
+        * Same processing as the step before (rescaling intensities between 0 and 255, removing background light).
+        * Filtering images :
+            * by creating *Connected Component Labeling*, as a result we get the list of coordinates of all the disconnected components in the image.
+            * Keeping the components with the most number of pixels, (assuming that the number we are trying to find is the biggest component and all other components are noise), and then setting all other component's pixels to zero.
+    * **Results:**
+        * digit 0, accuracy : 0.797
+        * digit 1, accuracy : 0.928
+        * digit 2, accuracy : 0.29
+        * digit 3, accuracy : 0.565
+        * digit 4, accuracy : 0.697
+        * digit 5, accuracy : 0.517
+        * digit 6, accuracy : 0.662
+        * digit 7, accuracy : 0.702
+        * digit 8, accuracy : 0.588
+        * digit 9, accuracy : 0.38
+        * overall accuracy : 0.6126
+    * **Confusion matrix**: <br/>
+        [[797  24  39  32   9  50  75   8  39  25] <br/>
+         [150 928 113  91 208 224 164 184 101 183] <br/>
+         [  3   4 290  39   7  43   6  37  35  10] <br/>
+         [  1   1 141 565   0  30   0   8  31  18] <br/>
+         [  7  12  50  22 697  20  36  13  54  80] <br/>
+         [  5   2  29  43   5 517  44  14  46   8] <br/>
+         [  5  12  22  12   8  18 662   3  28   1] <br/>
+         [ 23  10  70  81  37  46   2 702  21 288] <br/>
+         [  7   7 126  14  19  13   8  17 588   7] <br/>
+         [  2   0 120 101  10  39   3  14  57 380]] <br/>
+
+9. network trained on MNIST image modified with variety of techniques to simulate real world test images.
+    * **Train image processing:** the same training set as the step before, + trainset image normalised to mean 0 and standard deviation of 1.
+    * **Structure:** conv (8 kernel) > MaxPooling > conv (4 kernel) > MaxPooling > 12\*5\*5 > 250 > 80 > 10
+    * **Padding:** Valid padding was used to help reduce further the dimentionality
+    * **Kernels:** This network implemented backpropagation to learn its convolutinal layer's kernels
+    * **Test image (DIDA) processing:** 
+        * Same processing as the step before (rescaling intensities between 0 and 255, removing background light).
+        * Normalising image's pixels to mean 0 and standard deviation of 1.
+        * Filtering images :
+            * by creating *Connected Component Labeling*, as a result we get the list of coordinates of all the disconnected components in the image.
+            * Keeping the components with the most number of pixels, (assuming that the number we are trying to find is the biggest component and all other components are noise), and then setting all other component's pixels to zero.
+    * **Results:**
+        * digit 0, accuracy : 0.81
+        * digit 1, accuracy : 0.9
+        * digit 2, accuracy : 0.429
+        * digit 3, accuracy : 0.59
+        * digit 4, accuracy : 0.824
+        * digit 5, accuracy : 0.471
+        * digit 6, accuracy : 0.673
+        * digit 7, accuracy : 0.716
+        * digit 8, accuracy : 0.659
+        * digit 9, accuracy : 0.402
+        * overall accuracy : 0.6474
+    * **Confusion matrix**: <br/>
+        [[810  32  21  27   4  60  90  11  26  32] <br/>
+         [110 900  42  49 115  94 136 112  41 102] <br/>
+         [  5   2 429  61  12  59  26  62  30   7] <br/>
+         [  1   0 173 590   5  40   3  11  23  34] <br/>
+         [ 14  29  35  27 824  29  41  38  61 122] <br/>
+         [  0   0  34  41   2 471  18   5  69  13] <br/>
+         [ 15  12  34  13   4  46 673   1  29   4] <br/>
+         [ 32  17  36  96  24  69   4 716  26 269] <br/> 
+         [  8   7 154  32   7  67   7  15 659  15] <br/>
+         [  5   1  42  64   3  65   2  29  36 402]] <br/>

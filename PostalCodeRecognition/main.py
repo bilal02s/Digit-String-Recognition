@@ -8,13 +8,13 @@ from PIL.ImageFilter import (
 )
 from sklearn.metrics import confusion_matrix
 
-import util.util as util
-import util.kernels as kernels
-from network.Network import Network
-from network.Layer import Layer
-from network.ConvLayer import ConvLayer
-from network.MaxPooling import MaxPooling
-from network.FlattenLayer import FlattenLayer
+from MLTools.network.ConvLayer2 import ConvLayer
+from MLTools.network.MaxPooling2 import MaxPooling
+from MLTools.network.FlattenLayer import FlattenLayer
+from MLTools.network.Layer import Layer
+from MLTools.network.Network import Network
+from MLTools.network import util
+from MLTools.network import kernels
 
 from TestPreprocessing import filterMatrix
 
@@ -22,25 +22,24 @@ if __name__ == "__main__":
     #create the network
     net = Network()
 
-    #setting the error and activation functions
-    net.setErrorFunction(util.mse, util.mse_prime)
-    net.setActivationFunction(util.tanh, util.tanh_prime)
-
     #add layers
-    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2]))
-    net.addLayer(MaxPooling(kernels.one, stride=2))
-    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
-    net.addLayer(MaxPooling(kernels.one, stride=2))
-    net.addLayer(FlattenLayer())
-    net.addLayer(Layer(12*7*7, 250))
-    net.addLayer(Layer(250, 50))
-    net.addLayer(Layer(50, 10))
+    net.setLayers([
+        ConvLayer((8, 3, 3), activation='tanh', padding='valid'),
+        MaxPooling(kernels.one, stride=2),
+        ConvLayer((4, 3, 3), activation='tanh', padding='valid'),
+        MaxPooling(kernels.one, stride=2),
+        FlattenLayer(),
+        Layer(8*4*5*5, 250, activation='tanh'),
+        Layer(250, 80, activation='tanh'),
+        Layer(80, 10, activation='tanh')
+    ])
 
     #train the network
-    net.load_parameters("params/ParamsGeneric2")
+    net.load_parameters("params/NewNetParams")
 
     #make predictions
     all_preds = []
+    overall_accuracy = 0
     x = 6
     for digit in range(10):
         data = []
@@ -55,12 +54,14 @@ if __name__ == "__main__":
             image = np.dot(image, np.diag(np.repeat(255/(max-min), 28))) + np.repeat((255*min)/(min-max), 28).reshape((-1, 1))
             image = np.clip(image, 0, 255) 
             image = filterMatrix(image)
-            data.append([image])
+            data.append([image/128])
         data = np.array(data)
+        data = (data -np.mean(data))/np.std(data)
 
         all_predictions = np.array(net.predict(data))
         all_preds += list(np.argmax(all_predictions.reshape((len(y_test), 10)), axis=1).reshape(-1))
         accuracy = util.accuracy(all_predictions.reshape((len(y_test), 10)), y_test)
+        overall_accuracy += accuracy
         print("digit " + str(digit) + ", accuracy : " + str(accuracy))
 
         n = 6
@@ -78,9 +79,10 @@ if __name__ == "__main__":
             pyplot.imshow(data[i][0], cmap=pyplot.get_cmap('gray'))
             pyplot.text(10*(j%2), 70, "expected : " + str(expected) + ", predicted : " + str(predicted))
 
-            #if j%2 == 1:
-             #  pyplot.show()
+            if j%2 == 1:
+               pyplot.show()
 
+    print("overall accuracy : " + str(overall_accuracy/10))
     y_true = np.array([i for i in range(10) for j in range(1000)])
     classes = [i for i in range(10)]
     conf_matrix = confusion_matrix(all_preds, y_true)

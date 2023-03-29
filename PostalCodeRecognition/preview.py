@@ -8,15 +8,15 @@ from PIL.ImageFilter import (
 )
 from sklearn.metrics import confusion_matrix
 
-import util.util as util
-import util.kernels as kernels
-from network.Network import Network
-from network.Layer import Layer
-from network.ConvLayer import ConvLayer
-from network.MaxPooling import MaxPooling
-from network.FlattenLayer import FlattenLayer
+from MLTools.network.ConvLayer2 import ConvLayer
+from MLTools.network.MaxPooling2 import MaxPooling
+from MLTools.network.FlattenLayer import FlattenLayer
+from MLTools.network.Layer import Layer
+from MLTools.network.Network import Network
+from MLTools.network import util
+from MLTools.network import kernels
 
-from preprocessing import filterMatrix
+from TestPreprocessing import filterMatrix
 
 if __name__ == "__main__":
     digit = 2
@@ -33,5 +33,5 @@ if __name__ == "__main__":
         pyplot.subplot(330 + 1 + 1)#index%2)
         pyplot.imshow(filtered, cmap=pyplot.get_cmap('gray'))
 
-        #if index%2==1:
-        #pyplot.show()
+        if index%2==1:
+            pyplot.show()

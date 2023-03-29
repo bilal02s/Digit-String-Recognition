@@ -3,14 +3,15 @@ from random import randint
 from matplotlib import pyplot
 from PIL import Image
 
-import util.util as util
-import util.kernels as kernels
+from MLTools.network.ConvLayer2 import ConvLayer
+from MLTools.network.MaxPooling2 import MaxPooling
+from MLTools.network.FlattenLayer import FlattenLayer
+from MLTools.network.Layer import Layer
+from MLTools.network.Network import Network
+from MLTools.network import util
+from MLTools.network import kernels
+
 from MatrixProcessing import MyMatrix
-from network.Network import Network
-from network.Layer import Layer
-from network.ConvLayer import ConvLayer
-from network.MaxPooling import MaxPooling
-from network.FlattenLayer import FlattenLayer
 
 from keras.datasets import mnist
 from keras.utils import np_utils
@@ -23,12 +24,12 @@ def modify_data(matrices):
         matrix2 = MyMatrix(matrix.copy())
         matrix1.addRandomNoise(10).randomTransformation((-10, 0), ((-2, -2), (2, 2)))
         r = randint(-6, 3)
-        matrix2.zoom((r, r, 28-r, 28-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(20).addRandomScratch(100)
+        matrix2.zoom((r, r, 28-r, 28-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(10).addRandomScratch(150).blur()
 
         modified.append(matrix1.getMatrix())
         modified.append(matrix2.getMatrix())
 
-    return modified
+    return (np.array(modified)/128) -0.244
 
 if __name__ == "__main__":
     #loading the dataset
@@ -39,32 +40,35 @@ if __name__ == "__main__":
     # same for test data : 10000 samples
     x_test = x_test.astype('float32')
     x_test = modify_data(x_test)
-    x_test = np.array([[sample] for sample in x_test])
+    x_test = (x_test-np.mean(x_test))/np.std(x_test)
+    x_test = x_test.reshape(x_test.shape[0], 1, 28, 28)
 
     y_test = np_utils.to_categorical(y_test)
     y_test = y_test * 2 - 1
     y_test = np.repeat(y_test, 2, axis=0)
 
-    print("start training")
+    print("making predictions")
+
     #create the network
     net = Network()
 
-    #setting the error and activation functions
-    net.setErrorFunction(util.mse, util.mse_prime)
-    net.setActivationFunction(util.tanh, util.tanh_prime)
-
     #add layers
-    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2]))
-    net.addLayer(MaxPooling(kernels.one, stride=2))
-    net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal]))
-    net.addLayer(MaxPooling(kernels.one, stride=2))
-    net.addLayer(FlattenLayer())
-    net.addLayer(Layer(12*7*7, 250))
-    net.addLayer(Layer(250, 50))
-    net.addLayer(Layer(50, 10))
+    net.setLayers([
+        ConvLayer((8, 3, 3), activation='tanh', padding='valid'),
+        MaxPooling(kernels.one, stride=2),
+        ConvLayer((4, 3, 3), activation='tanh', padding='valid'),
+        MaxPooling(kernels.one, stride=2),
+        FlattenLayer(),
+        Layer(8*4*5*5, 250, activation='tanh'),
+        Layer(250, 80, activation='tanh'),
+        Layer(80, 10, activation='tanh')
+    ])
 
-    #train the network
-    net.load_parameters("params/ParamsGeneric")
+    #load parameters
+    net.load_parameters("params/NewNetParams")
+
+    print(net.layers[0].kernels)
+    print(net.layers[2].kernels)
 
     #making predictions
     n = 10
