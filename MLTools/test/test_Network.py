@@ -12,8 +12,8 @@ class NetworkTest(unittest.TestCase):
         self.assertEqual(0, len(net.layers))
 
         net.setLayers([
-            Layer(2, 3),
-            Layer(3, 1)
+            Layer(2, 3, activation='tanh'),
+            Layer(3, 1, activation='tanh')
         ])
 
         self.assertEqual(2, len(net.layers))

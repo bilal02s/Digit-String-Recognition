@@ -57,8 +57,6 @@ class ConvLayer:
         n, rowK, colK = ker_shape
         self.kernels = np.random.default_rng().normal(0, 1/np.sqrt(1764), size=ker_shape)
         self.bias = np.repeat(0.0, n).reshape(n)
-        #self.kernels = [np.random.randn(n*rowK*colK).reshape(n, rowK, colK)
-        #self.bias = np.random.randn(n).reshape(n)
 
         self.activation, self.activation_prime = util.get_activation_function(activation)
 
@@ -157,7 +155,7 @@ class ConvLayer:
         self.trans_matrices = self.trans_matrices.transpose(0, 2, 1)
         ker_err = np.matmul(
             common.reshape(out_dim, 1, out_row*out_col),
-            np.concatenate([self.trans_matrices for i in range(n)], axis=1).reshape(out_dim, out_row*out_col, rowK*colK)
+            np.repeat(self.trans_matrices, n, axis=0).reshape(out_dim, out_row*out_col, rowK*colK)
         ).reshape(in_dim, n, rowK*colK).sum(axis=0).reshape(n, rowK, colK)
 
         bias_err = common.sum(axis=(1, 2)).reshape(in_dim, n).sum(axis=0)

@@ -37,7 +37,7 @@ Below you will find a brief explanation of the development details of each compo
 
 * Convolutional Layer (randomly initialised kernels, backpropagation implemeted):
     * Location: <code>/network/ConvLayer2.py</code>
-    * Description: The kernels and biases are defined using the defined initialisation method, the number of kernels and their shape is defined at the construction. <br/>
+    * Description: The kernels and biases are defined using the defined initialisation method, the number of kernels and their shape is defined at the construction. Padding type could be 'same' or 'valid' and is specified during the construction.<br/>
     During forward propagation, the input arrays are convolved using the kernels and then returned.
     During backpropagation, the kernel's and biase's error are calculated and are updated using the defined optimisation algorithm. <br/>
     The activation function to be used is defined at the construction.
@@ -78,16 +78,21 @@ The following aspects have been tested for the aforementioned components:
     * Testing the backpropagation procedure using predefined weights and biases, on a testing input matrix and an error vector, checking if the weights and biases have been updated in the expected way, and checking if the input error returned is the same as the expected one.
 
 * Convolutional Layer (no backpropagation):
-    * No testing have been done yet
+    * Testing if during the forward propagation the input images are convolved correctly by the defined kernels
 
 * Convolutional Layer (with backpropagation):
-    * No testing have been done yet
+    * Testing if during the forward propagation the input images are convolved correctly by the defined kernels in two modes: same padding and valid padding
+    * Testing if during the backpropagation, the kernelss, biase's error are calculated and thus updated correctly, and that the input error returned matchs the expected input error.
 
 * Max Pooling Layer:
-    * No testing have been done yet
+    * Testing the forward propagation with a kernel of 2x2 consisting of ones, with a stride value of 2, and verifying that when it reduces the dimensions of an input matrix by half, by picking only the maximum values from within the kernel area.
+    * Testing the forward propagation using a matrix of unpair dimension and verifying that it discards the last row and last columns as they dont fit into a 2x2 kernel.
+    * Testing the forward propagation using an array of matrices, and checking that it returns an array of sampled matrices, whose dimension have been halfed containing only the maximums from within the kernel area.
+    * Testing backpropagation to see if the it returns the correct error matrix given an error matrix.
 
 * Flatten Layer:
-    * No testing have been done yet
+    * The layer is tested to verify that in the forward propagation, an input matrix of any dimension is flattened out to have a only 1 row, and all the elements in the columns
+    * Testing the backpropagation process, to verify that when it receives a flattened error vector, it is reshaped to the previous input's shape during forward propagation and it is returned.
 
 * Network Model:
     * A small network have been tested in order to seek learning behaviour on trivial task, such as approximating the logical AND and OR functions, using stochastic gradient descent as an optimiser and mean squared error as error function, the model is evalued based on its ability to predict the correct outcome for a given input vector.
