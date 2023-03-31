@@ -220,6 +220,9 @@ The trained parameters that we used in that network are stored in a binary file 
 <br/>
 We have also tried to verify the performance of our convolutional neural network by training a model on Mnist dataset after being modified by a function. The function takes the dataset, and adds to every image a random padding so that the final image has a dimension of 42x42, the padding values are zero, and the resulting increase in dimension has a factor of 1.5. The padding is random making it seem that the digit's position in the image is random and could be at the top of the image, bottom , or bottom right for example, etc... After adding the padding, a random gaussian noise has been introduced of mean zero and standard deviation of 12.75 (before normalising the image). <br/>
 
+The few images have been taken from the modified training set, and is shown is the below image
+![](./images/)
+
 We have tried all the structures and parameters that we mentinoed earlier when we were testing the model on the original dataset. and we found that while using one convolutional layer the model was able to converge but unable to exceed 0.83 accuracy mark on the modified testset. <br/>
 Using two convolutional layer without backpropagation (on the convolutional layer) and same kernels as described before, the model is able to classify the test dataset with a higher accuracy of 0.91. <br/>
 And finally, When using two convolutional layers with backpropagation, the model performed the best reaching an accuracy of 0.95 on the Mnist testset. Basically the model was able the classify the noisy images without major difficulties.
@@ -233,6 +236,9 @@ We were able to reach an accuracy of 0.954 with the above mentionned structure, 
 This network structure yielded the best result in the Mnist modified testset. <br/>
 The trained parameters that we used in that network are stored in a binary file at the following location <code>./CNN/params/NoisyMnistParams</code>. <br/>
 
+The images below show a testset sample in which the network was able to predict correctly the noisy images, and another image where the digit in the image was not clear enough, and the prediction failed.
+![correct predictions](./images/noisy2.png)
+![incorrect predictions](./images/noisy1.png)
 
 ## DIDA dataset Digit Recognition
 The projet's goal for this version is to be able using the developped tools to train a network on the Mnist dataset, that is able to recognize digits from outside the Mnist dataset. For this reason we have chosen a dataset that resembles real life handwritten digits that we encounter, meaning that the digits have a lot of scratchs around as well as noise, and sometimes strings of digits can overlap and create a wide range of unusual images that the human face no problem in recognising, and thus the network should learn the features that make up digits all while ignoring the potential noises and unexpected pixels that may be bright in some areas that normally shouldnt. <br/>
@@ -267,6 +273,13 @@ Although rescaling the image's size, pixel's intensity and transforming it to bl
 5. After finishing and retrieving the number of components and the lists of the coordinates of their corresponding pixels, we filter out using a naive approach by keeping the biggest component (having the most number of pixels) and setting the pixel's of all other components to zero.
 
 What the described process above will do is take an image, determine all the disconnected components and filter out all the smallest component and keeping only one big component that is assumed to be the digit we want to keep.
+
+The images below show a sample of the original DIDA images, and then a preprocessed version of the same images after rescaling size and intensity, and then a filtered version by keeping only the biggest component in the image. <br/>
+We can see that the filtering process yield satisfying results in the majority of the images and increase the accuracy of the recognition significantly, although it is not perfect and can sometimes filter out parts of the digit. <br/>
+For example the number 5 shown below is unrecognizable after applying the filter. <br/>
+![original images](./images/originalDIDA.png)
+![preproccessed images](./images/preprocDIDA.png)
+![filtered images](./images/filteredDIDA.png)
 
 After Preprocessing the DIDA image dataset and testing the performance of our trained network on these images, the recognition had an overall accuracy of 0.64, with very high accuracy on digits zero, one, four and seven, and very poor for digits two, nine. and average for all others.
 
