@@ -1,10 +1,11 @@
+import sys
 import numpy as np
 from random import randint
 from matplotlib import pyplot
 
 from MLTools.network.ConvLayer import ConvLayer as Conv
 from MLTools.network.ConvLayer2 import ConvLayer
-from MLTools.network.MaxPooling2 import MaxPooling
+from MLTools.network.MaxPooling import MaxPooling
 from MLTools.network.FlattenLayer import FlattenLayer
 from MLTools.network.Layer import Layer
 from MLTools.network.Network import Network
@@ -29,6 +30,10 @@ def modify_data(matrices):
     return np.concatenate(res)
 
 if __name__ == "__main__":
+    display = False
+    if len(sys.argv) > 1 and sys.argv[1] == '-v':
+        display = True 
+
     #loading the dataset
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
@@ -49,15 +54,6 @@ if __name__ == "__main__":
     net = Network()
 
     #add layers
-    #net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal], (42, 42)))
-    #net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(42, 42)))
-    #net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal], (21, 21)))
-    #net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(21, 21)))
-    #net.addLayer(FlattenLayer())
-    #net.addLayer(Layer(3*21*21, 500))
-    #net.addLayer(Layer(500, 200))
-    #net.addLayer(Layer(200, 50))
-    #net.addLayer(Layer(50, 10))
     net.setLayers([
         ConvLayer((8, 3, 3), activation='tanh', padding='valid'),
         MaxPooling(kernels.one, stride=2),
@@ -79,17 +75,23 @@ if __name__ == "__main__":
     predictions = net.predict(x_test[indices])
 
     #display predictions
-    for j in range(0, n):
-        i = indices[j]
-        expected, predicted = util.get_prediction(y_test[i]), util.get_prediction(predictions[j])
-        print("expected : " + str(y_test[i]) + ", predicted : " + str(predictions[j]))
+    for j in range(0, n, 2):
+        i1, i2 = indices[j], indices[j+1]
+        expected, predicted = util.get_prediction(y_test[i1]), util.get_prediction(predictions[j])
+        print("expected : " + str(y_test[i1]) + ", predicted : " + str(predictions[j]))
+        expected2, predicted2 = util.get_prediction(y_test[i2]), util.get_prediction(predictions[j+1])
+        print("expected : " + str(y_test[i2]) + ", predicted : " + str(predictions[j+1]))
 
-        pyplot.subplot(330 + 1 + j%2)
-        pyplot.imshow(x_test[i][0], cmap=pyplot.get_cmap('gray'))
-        pyplot.text(10*(j%2), 70, "expected : " + str(expected) + ", predicted : " + str(predicted))
+        pyplot.subplot(330 + 1 + j%4*3)
+        pyplot.imshow(x_test[i1][0], cmap=pyplot.get_cmap('gray'))
+        pyplot.text(0, 60, "expected : " + str(expected) + ", predicted : " + str(predicted))
 
-        #if j%2 == 1:
-         #   pyplot.show()
+        pyplot.subplot(330 + 3 + j%4*3)
+        pyplot.imshow(x_test[i2][0], cmap=pyplot.get_cmap('gray'))
+        pyplot.text(0, 60, "expected : " + str(expected2) + ", predicted : " + str(predicted2))
+
+        if display and j%4 == 0:
+            pyplot.show()
 
     all_predictions = np.array(net.predict(x_test))
     accuracy = util.accuracy(all_predictions.reshape((len(y_test), 10)), y_test)

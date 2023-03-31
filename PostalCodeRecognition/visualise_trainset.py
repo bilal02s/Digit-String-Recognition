@@ -8,7 +8,7 @@ import util.kernels as kernels
 from MatrixProcessing import MyMatrix
 from network.Network import Network
 from network.Layer import Layer
-from network.ConvLayer import ConvLayer
+from network.ConvLayer2 import ConvLayer
 from network.MaxPooling import MaxPooling
 from network.FlattenLayer import FlattenLayer
 

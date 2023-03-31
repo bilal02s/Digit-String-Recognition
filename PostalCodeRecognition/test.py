@@ -4,7 +4,7 @@ from matplotlib import pyplot
 from PIL import Image
 
 from MLTools.network.ConvLayer2 import ConvLayer
-from MLTools.network.MaxPooling2 import MaxPooling
+from MLTools.network.MaxPooling import MaxPooling
 from MLTools.network.FlattenLayer import FlattenLayer
 from MLTools.network.Layer import Layer
 from MLTools.network.Network import Network
