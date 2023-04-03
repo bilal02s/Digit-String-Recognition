@@ -3,14 +3,15 @@ from matplotlib import pyplot
 from PIL import Image
 from random import randint
 
-import util.util as util
-import util.kernels as kernels
+from MLTools.network.ConvLayer2 import ConvLayer
+from MLTools.network.MaxPooling import MaxPooling
+from MLTools.network.FlattenLayer import FlattenLayer
+from MLTools.network.Layer import Layer
+from MLTools.network.Network import Network
+from MLTools.network import util
+from MLTools.network import kernels
+
 from MatrixProcessing import MyMatrix
-from network.Network import Network
-from network.Layer import Layer
-from network.ConvLayer2 import ConvLayer
-from network.MaxPooling import MaxPooling
-from network.FlattenLayer import FlattenLayer
 
 from keras.datasets import mnist
 from keras.utils import np_utils
@@ -19,11 +20,12 @@ def modify_data(matrices):
     modified = []
 
     for matrix in matrices:
+        matrix = np.pad(matrix, 7, mode='constant', constant_values=0)
         matrix1 = MyMatrix(matrix)
         matrix2 = MyMatrix(matrix.copy())
-        matrix1.addRandomNoise(10).randomTransformation((-10, 0), ((-2, -2), (2, 2)))
-        r = randint(-6, 3)
-        matrix2.zoom((r, r, 28-r, 28-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(5).addRandomScratch(150).blur()
+        matrix1.zoom((7, 7, 35, 35)).addRandomNoise(10).randomTransformation((-10, 0), ((-2, -2), (2, 2)))
+        r = randint(1, 10)
+        matrix2.zoom((r, r, 42-r, 42-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(10).addRandomScratch(200).blur()
 
         modified.append(matrix1.getMatrix())
         modified.append(matrix2.getMatrix())

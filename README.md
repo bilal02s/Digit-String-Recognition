@@ -247,18 +247,23 @@ The dataset consists of images of varying dimentions at an average of around 28x
 
 For this particular task, we have to train the model on a dataset that resembles the behaviour we have described above. We need to create our own augmented data to be generate such dataset in order to train the model on. For this reason we have created a class whose purpose is to generate augmented images from input image, using various techniques such as random noise, random zoom, random translation, rotations, as well as blur. The class accepts the input image during construction and poccess a handeful of methods that permit us to manipulate the image to obtain the desired effects. <br/>
 
+In order to visualise what the training set images looks like, you can run the following command after opening the terminal inside the repository <code>./PostalCodeRecognition/</code>
+```bash
+    python3 visualise_trainset.py
+```
+
 The mnist original training set consists of 60000 images, we have taken these images and augmented them heavily in order to see how the network adapts to such training data. The final training set consisted of 120000 images, the first 60000 images are the original Mnist images, the last 60000 are the augmented images. We ended up with double the original size of the training set, and that's for the sake of keeping stability, so that the network is still able to distinguish digits, wether they are clear and centered, or augmented and modified. <br/>
 
 The structure we used to train the network is the following: <br/>
 
-**ConvLayer (8 kernels 3x3) -> MaxPooling -> ConvLayer (4 kernels 3x3) -> MaxPooling -> Flatten Layer -> Layer (8x4x5x5) -> Layer (250) -> Layer (80) -> Layer (10)** <br/>
+**ConvLayer (8 kernels 3x3) -> MaxPooling -> ConvLayer (4 kernels 3x3) -> MaxPooling -> ConvLayer (4 kernels 3x3) -> MaxPooling -> Flatten Layer -> Layer (8x4x4x3x3) -> Layer (400) -> Layer (100) -> Layer (50) -> Layer (10)** <br/>
 
-The network is made up of two convolutional layers (Valid padding used to reduce further the dimentionality) followed by a maxpooling layer each, and after a flatten layer is used to connect the output to the input of fully connected layers, we have used 4 layers in the fully connected part of the network. <br/>
-We were able to reach an accuracy of 0.9217 with the above mentionned structure on Mnist modified/augmented testset, using stochastic gradient descent as optimiser, parabolic tangent as activation function for all layers, mean squared error as the error function, and intialising the parameters using Xavier initialisation. <br/>
+The network is made up of tthree convolutional layers (Valid padding used to reduce further the dimentionality) followed by a maxpooling layer each, and after a flatten layer is used to connect the output to the input of fully connected layers, we have used 5 layers in the fully connected part of the network. <br/>
+We were able to reach an accuracy of 0.9558 with the above mentionned structure on Mnist modified/augmented testset, using stochastic gradient descent as optimiser, parabolic tangent as activation function for all layers, mean squared error as the error function, and intialising the parameters using Xavier initialisation. <br/>
 
 Now the goal is to test the performance of the network on DIDA digits dataset, trying to perform recognition on the images straight forward yielded us terrible results, and soon enough we recognised the importance of performing slight data preprocessing in order to make it cleaner, easier for the network to recognise, in a manner to be comparable to the same data it trained on. <br/>
 The preprocessing consisted of several parts:
-* Rescaling the images to be exactly 28x28 pixels.
+* Rescaling the images to be exactly 42x42 pixels.
 * Transforming the image into black and white.
 * Rescaling the intensity of the pixels so that the background will have a value of 0 pixel
 * Filter the image by applying *Connected Component Analysis* to distinguish the different objects present in the image
@@ -281,7 +286,7 @@ For example the number 5 shown below is unrecognizable after applying the filter
 ![preproccessed images](./images/preprocDIDA.png)
 ![filtered images](./images/filteredDIDA.png)
 
-After Preprocessing the DIDA image dataset and testing the performance of our trained network on these images, the recognition had an overall accuracy of 0.64, with very high accuracy on digits zero, one, four and seven, and very poor for digits two, nine. and average for all others.
+After Preprocessing the DIDA image dataset and testing the performance of our trained network on these images, the recognition had an overall accuracy of 0.7172, with very high accuracy on digits zero, one, four and seven, and very poor for digits two, nine. and average for all others.
 
 To reproduce the same results, you need to open the terminal in the directory <code>./PostalCodeRecognition</code>, and execute the following command:
 ```bash

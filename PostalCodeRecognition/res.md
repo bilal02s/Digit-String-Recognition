@@ -200,7 +200,7 @@
 
 8. network trained on MNIST image modified with variety of techniques to simulate real world test images.
     * **Train image processing:** the same training set as the step before
-    * **Structure:** conv (8 kernel) > MaxPooling > conv (4 kernel) > MaxPooling > 12\*5\*5 > 250 > 80 > 10
+    * **Structure:** conv (8 kernel) > MaxPooling > conv (4 kernel) > MaxPooling > 32\*5\*5 > 250 > 80 > 10
     * **Padding:** Valid padding was used to help reduce further the dimentionality
     * **Kernels:** This network implemented backpropagation to learn its convolutinal layer's kernels
     * **Test image (DIDA) processing:** 
@@ -244,25 +244,60 @@
             * by creating *Connected Component Labeling*, as a result we get the list of coordinates of all the disconnected components in the image.
             * Keeping the components with the most number of pixels, (assuming that the number we are trying to find is the biggest component and all other components are noise), and then setting all other component's pixels to zero.
     * **Results:**
-        * digit 0, accuracy : 0.81
-        * digit 1, accuracy : 0.9
-        * digit 2, accuracy : 0.429
-        * digit 3, accuracy : 0.59
-        * digit 4, accuracy : 0.824
-        * digit 5, accuracy : 0.471
-        * digit 6, accuracy : 0.673
-        * digit 7, accuracy : 0.716
-        * digit 8, accuracy : 0.659
-        * digit 9, accuracy : 0.402
-        * overall accuracy : 0.6474
+        * digit 0, accuracy : 0.825
+        * digit 1, accuracy : 0.898
+        * digit 2, accuracy : 0.431
+        * digit 3, accuracy : 0.57
+        * digit 4, accuracy : 0.86
+        * digit 5, accuracy : 0.502
+        * digit 6, accuracy : 0.691
+        * digit 7, accuracy : 0.732
+        * digit 8, accuracy : 0.652
+        * digit 9, accuracy : 0.395
+        * overall accuracy : 0.6556
     * **Confusion matrix**: <br/>
-        [[810  32  21  27   4  60  90  11  26  32] <br/>
-         [110 900  42  49 115  94 136 112  41 102] <br/>
-         [  5   2 429  61  12  59  26  62  30   7] <br/>
-         [  1   0 173 590   5  40   3  11  23  34] <br/>
-         [ 14  29  35  27 824  29  41  38  61 122] <br/>
-         [  0   0  34  41   2 471  18   5  69  13] <br/>
-         [ 15  12  34  13   4  46 673   1  29   4] <br/>
-         [ 32  17  36  96  24  69   4 716  26 269] <br/> 
-         [  8   7 154  32   7  67   7  15 659  15] <br/>
-         [  5   1  42  64   3  65   2  29  36 402]] <br/>
+        [[825  37  23  36   5  57 104  16  29  33] <br/>
+         [109 898  42  45  89 112 101  91  41  85] <br/>
+         [  6   4 431  75  12  47  22  57  31  12] <br/>
+         [  1   0 161 570   4  40   1  11  13  30] <br/>
+         [ 14  32  34  35 860  32  54  45  85 150] <br/>
+         [  0   0  30  33   0 502  17   5  72   9] <br/>
+         [ 14  13  37  10   1  40 691   2  21   3] <br/>
+         [ 25   8  49  84  22  51   2 732  22 276] <br/>
+         [  4   7 153  31   5  59   7  12 652   7] <br/>
+         [  2   1  40  81   2  60   1  29  34 395]] <br/>
+
+10. network trained on MNIST image modified with variety of techniques to simulate real world test images.
+    * **Train image processing:** the same training set as the step before, except image resized to (42, 42) instead of (28, 28), + trainset image normalised to mean 0 and standard deviation of 1.
+    * **Structure:** conv (8 kernel) > MaxPooling > conv (4 kernel) > MaxPooling > conv (4 kernel) > MaxPooling > 128\*3\*3 > 400 > 100 > 50 > 10
+    * **Padding:** Valid padding was used to help reduce further the dimentionality
+    * **Kernels:** This network implemented backpropagation to learn its convolutinal layer's kernels
+    * **Test image (DIDA) processing:** 
+        * Same processing as the step before (rescaling intensities between 0 and 255, removing background light).
+        * Normalising image's pixels to mean 0 and standard deviation of 1.
+        * Filtering images :
+            * by creating *Connected Component Labeling*, as a result we get the list of coordinates of all the disconnected components in the image.
+            * Keeping the components with the most number of pixels, (assuming that the number we are trying to find is the biggest component and all other components are noise), and then setting all other component's pixels to zero.
+    * **Results:**
+        * digit 0, accuracy : 0.863
+        * digit 1, accuracy : 0.936
+        * digit 2, accuracy : 0.517
+        * digit 3, accuracy : 0.733
+        * digit 4, accuracy : 0.796
+        * digit 5, accuracy : 0.582
+        * digit 6, accuracy : 0.754
+        * digit 7, accuracy : 0.798
+        * digit 8, accuracy : 0.764
+        * digit 9, accuracy : 0.43
+        * overall accuracy : 0.7172
+    * **Confusion matrix**: <br/>
+        [[863  16  14  21   2  20  52   2  20  23] <br/>
+         [ 73 936  89  33 118 117  89 106  19  91] <br/>
+         [  3   5 517  27  23  23  15  48  10  11] <br/>
+         [  2   0 144 733   3  65   2  10  34  48] <br/>
+         [ 17  17  29  10 796  29  29   9  46  72] <br/>
+         [  3   0  31  49   0 582  38   1  57  23] <br/>
+         [  4   6   6   6   3   8 754   0  12   2] <br/>
+         [ 29  17  27  65  34  69   3 798   6 293] <br/>
+         [  5   3 112  11  15  27  13   8 764   7] <br/>
+         [  1   0  31  45   6  60   5  18  32 430]] <br/>

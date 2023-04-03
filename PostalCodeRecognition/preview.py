@@ -16,7 +16,7 @@ from MLTools.network.Network import Network
 from MLTools.network import util
 from MLTools.network import kernels
 
-from TestPreprocessing import filterMatrix
+from FilterImage import filterMatrix
 
 if __name__ == "__main__":
     digit = 2

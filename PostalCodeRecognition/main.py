@@ -16,7 +16,7 @@ from MLTools.network.Network import Network
 from MLTools.network import util
 from MLTools.network import kernels
 
-from TestPreprocessing import filterMatrix
+from FilterImage import filterMatrix
 
 if __name__ == "__main__":
     #create the network
@@ -28,19 +28,23 @@ if __name__ == "__main__":
         MaxPooling(kernels.one, stride=2),
         ConvLayer((4, 3, 3), activation='tanh', padding='valid'),
         MaxPooling(kernels.one, stride=2),
+        ConvLayer((4, 3, 3), activation='tanh', padding='valid'),
+        MaxPooling(kernels.one, stride=2),
         FlattenLayer(),
-        Layer(8*4*5*5, 250, activation='tanh'),
-        Layer(250, 80, activation='tanh'),
-        Layer(80, 10, activation='tanh')
+        Layer(8*4*4*3*3, 400, activation='tanh'),
+        Layer(400, 100, activation='tanh'),
+        Layer(100, 50, activation='tanh'),
+        Layer(50, 10, activation='tanh')
     ])
 
     #train the network
-    net.load_parameters("params/NewNetParams")
+    net.load_parameters("params/NewNetParamsV2")
 
     #make predictions
     all_preds = []
     overall_accuracy = 0
     x = 6
+    size = 42
     for digit in range(10):
         data = []
         y = [-1 for i in range(10)]
@@ -49,9 +53,9 @@ if __name__ == "__main__":
         for i in range(1, 1001): 
             index = i
             path = 'data/' + str(digit) + '/' + str(digit) + '_' + str(index) + '.jpg'
-            image = np.array(ImageOps.invert(Image.open(path).convert('L').resize((28, 28)).filter(SHARPEN))).astype('float32')
+            image = np.array(ImageOps.invert(Image.open(path).convert('L').resize((size, size)))).astype('float32')
             min, max = np.quantile(image, 0.25), image.max()
-            image = np.dot(image, np.diag(np.repeat(255/(max-min), 28))) + np.repeat((255*min)/(min-max), 28).reshape((-1, 1))
+            image = np.dot(image, np.diag(np.repeat(255/(max-min), size))) + np.repeat((255*min)/(min-max), size).reshape((-1, 1))
             image = np.clip(image, 0, 255) 
             image = filterMatrix(image)
             data.append([image/128])

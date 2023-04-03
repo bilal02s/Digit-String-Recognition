@@ -20,11 +20,12 @@ def modify_data(matrices):
     modified = []
 
     for matrix in matrices:
+        matrix = np.pad(matrix, 7, mode='constant', constant_values=0)
         matrix1 = MyMatrix(matrix)
         matrix2 = MyMatrix(matrix.copy())
-        matrix1.addRandomNoise(10).randomTransformation((-10, 0), ((-2, -2), (2, 2)))
-        r = randint(-6, 3)
-        matrix2.zoom((r, r, 28-r, 28-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(10).addRandomScratch(150).blur()
+        matrix1.zoom((7, 7, 35, 35)).addRandomNoise(10).randomTransformation((-10, 0), ((-2, -2), (2, 2)))
+        r = randint(1, 10)
+        matrix2.zoom((r, r, 42-r, 42-r)).randomTransformation((-30, 15), ((-5, -5), (5, 5))).addRandomNoise(10).addRandomScratch(180).blur()
 
         modified.append(matrix1.getMatrix())
         modified.append(matrix2.getMatrix())
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     x_test = x_test.astype('float32')
     x_test = modify_data(x_test)
     x_test = (x_test-np.mean(x_test))/np.std(x_test)
-    x_test = x_test.reshape(x_test.shape[0], 1, 28, 28)
+    x_test = x_test.reshape(x_test.shape[0], 1, 42, 42)
 
     y_test = np_utils.to_categorical(y_test)
     y_test = y_test * 2 - 1
@@ -58,14 +59,17 @@ if __name__ == "__main__":
         MaxPooling(kernels.one, stride=2),
         ConvLayer((4, 3, 3), activation='tanh', padding='valid'),
         MaxPooling(kernels.one, stride=2),
+        ConvLayer((4, 3, 3), activation='tanh', padding='valid'),
+        MaxPooling(kernels.one, stride=2),
         FlattenLayer(),
-        Layer(8*4*5*5, 250, activation='tanh'),
-        Layer(250, 80, activation='tanh'),
-        Layer(80, 10, activation='tanh')
+        Layer(8*4*4*3*3, 400, activation='tanh'),
+        Layer(400, 100, activation='tanh'),
+        Layer(100, 50, activation='tanh'),
+        Layer(50, 10, activation='tanh')
     ])
 
     #load parameters
-    net.load_parameters("params/NewNetParams")
+    net.load_parameters("params/NewNetParamsV2")
 
     print(net.layers[0].kernels)
     print(net.layers[2].kernels)

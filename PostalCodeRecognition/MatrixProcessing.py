@@ -51,16 +51,18 @@ class MyMatrix:
     def addRandomScratch(self, value):
         row, col = self.matrix.shape
         line_width = 1
-        line = np.array([[value for i in range(col)] for i in range(line_width)]) + np.random.randn(line_width, col)
+        line = np.repeat(value, col*line_width).reshape(line_width, col) + np.random.randn(line_width, col)
         offset = randint(0, row-line_width) 
         scratch = np.pad(line, ((offset, row-offset-line_width), (0, 0)), mode='constant', constant_values=0)
         nb_scratch = randint(1, 2)
 
+        gen = np.random.default_rng().normal
         for i in range(nb_scratch):
             im = MyMatrix(scratch.copy())
-            im.transform(angle=randint(0, 359))
+            angle = randint(0, 1)*gen(0, 10, size=1) + randint(0, 1)*gen(90, 10, size=1)
+            im.transform(angle=angle)
             self.matrix = np.max((self.matrix, im.getMatrix()), axis=0)
-        
+
         return self
 
     def blur(self):
