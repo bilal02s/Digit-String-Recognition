@@ -2,6 +2,8 @@ import numpy as np
 from . import util
 
 class ConvLayer:
+    _kernels_initialised = False
+    _indices_initialised = False
     """
     A class representing a convolution layer in a fully connected neural network,
     this convolution layer initialises its kernels randomly, and performs backpropagation to learn the values.
@@ -37,7 +39,7 @@ class ConvLayer:
     load_parameters(file):
         load parameters into this layer's kernels and bias from binary file given in parameter
     """
-    def __init__(self, ker_shape, activation, padding='valid'):
+    def __init__(self, ker_shape, activation, padding='valid', input_size=None):
         """
         Define the kernel's shape, initialise the kernels to random values, set the activation function
         and padding type.
@@ -50,31 +52,54 @@ class ConvLayer:
                 the name of the activation function to use
             padding : str, optional
                 the padding type, default type is valid
+            input_size : tuple, optional
+                the shape of the input images
         """
         self.ker_shape = ker_shape
         self.padding = padding
 
-        n, rowK, colK = ker_shape
-        self.kernels = np.random.default_rng().normal(0, 1/np.sqrt(1764), size=ker_shape)
-        self.bias = np.repeat(0.0, n).reshape(n)
-
         self.activation, self.activation_prime = util.get_activation_function(activation)
 
-    def getTransIndices(self, in_shape):
+        if input_size != None:
+            self._init_kernels(input_size)
+            self._init_indices(input_size)
+
+    def _init_kernels(self, in_shape):
         ''' 
-        Computes transformation indices for the forward and back propagation.
-        Returns the indices of the forward, and stores the indices of backward as attribut
+        Initialise kernels to random values.
+
         Parameters
         ----------
-            in_shape : triplet
-                The dimension and shape of input matrices whose transformation indices to be computed
+            in_shape : tuple
+                The shape of input matrices whose transformation indices to be computed
         
         Returns
         -------
         I, J : matrices representing indices of rows and columns
         '''
         (n, rowK, colK) = self.ker_shape
-        (dim, row, col) = in_shape
+        (row, col) = in_shape
+
+        self.kernels = np.random.default_rng().normal(0, 1/np.sqrt(row*col), size=self.ker_shape)
+        self.bias = np.repeat(0.0, n).reshape(n)
+        self._kernels_initialised = True
+
+    def _init_indices(self, in_shape):
+        ''' 
+        Computes transformation indices for the forward and back propagation.
+        Stores the indices as attributs
+        
+        Parameters
+        ----------
+            in_shape : tuple
+                The shape of input matrices whose transformation indices to be computed
+        
+        Returns
+        -------
+        I, J : matrices representing indices of rows and columns
+        '''
+        (n, rowK, colK) = self.ker_shape
+        (row, col) = in_shape
 
         if self.padding == 'same':
             i0 = np.repeat(np.arange(rowK), colK).reshape((-1, 1))
@@ -83,6 +108,7 @@ class ConvLayer:
             j1 = np.tile(np.arange(col), row).reshape((1, -1))
             I = i0 + i1
             J = j0 + j1
+            self.I, self.J = I, J
             self.BKI, self.BKJ = I, J
         elif self.padding == 'valid':
             i0 = np.repeat(np.arange(rowK), colK).reshape((-1, 1))
@@ -91,12 +117,12 @@ class ConvLayer:
             j0 = np.tile(np.arange(colK), rowK).reshape((-1, 1))
             j1 = np.tile(np.arange(col-(colK//2*2)), row-(rowK//2*2)).reshape((1, -1))
             j2 = np.tile(np.arange(col), row).reshape((1, -1))
-            I, self.BKI = i0 + i1, i0 + i2
-            J, self.BKJ = j0 + j1, j0 + j2
+            self.I, self.BKI = i0 + i1, i0 + i2
+            self.J, self.BKJ = j0 + j1, j0 + j2
         else:
-            raise Exception("Unvalid padding type")
+            raise Exception("Invalid padding type")
 
-        return I, J
+        self._indices_initialised = True
 
     def forward_propagation(self, matrices):
         """
@@ -113,16 +139,21 @@ class ConvLayer:
         output : numpy.ndarray
             a 3-dimensional matrix after being convolved by kernels
         """
+
         n, rowK, colK = self.ker_shape
         dim, row, col = matrices.shape
         out_row, out_col = self.padding == 'same' and (row, col) or (row-(rowK//2*2), col-(colK//2*2))
+
+        if not self._kernels_initialised:
+            self._init_kernels((row, col))
+        if not self._indices_initialised:
+            self._init_indices((row, col))
         
         self.input_shape = matrices.shape
-        I, J = self.getTransIndices(matrices.shape)
 
         if self.padding == 'same':
             matrices = np.pad(matrices, ((0, 0), (rowK//2, rowK//2) , (colK//2, colK//2)), mode='constant', constant_values=0)
-        self.trans_matrices = matrices[:, I, J]
+        self.trans_matrices = matrices[:, self.I, self.J]
         self.conv_output = (np.matmul(self.kernels.reshape((n, -1)), self.trans_matrices)+self.bias.reshape(n, 1)).reshape((n*dim, out_row, out_col))
         output = self.activation(self.conv_output)
 
@@ -195,11 +226,14 @@ class ConvLayer:
         file : open file
             an open file to read
         """
-        kernelsCount = self.kernels.size
-        biasCount = self.bias.size
+        (n, rowK, colK) = self.ker_shape
 
-        self.kernels = np.fromfile(file, count=kernelsCount).reshape(self.kernels.shape)
-        self.bias = np.fromfile(file, count=biasCount).reshape(self.bias.shape)
+        kernelsCount = n*rowK*colK
+        biasCount = n
+
+        self.kernels = np.fromfile(file, count=kernelsCount).reshape(n, rowK, colK)
+        self.bias = np.fromfile(file, count=biasCount).reshape(n)
+        self._kernels_initialised = True
     
     def reset(self):
         return None
