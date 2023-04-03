@@ -43,15 +43,6 @@ if __name__ == "__main__":
         Layer(250, 80, activation='tanh'),
         Layer(80, 10, activation='tanh')
     ])
-    #net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2], (28, 28)))
-    #net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(28, 28)))
-    #net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal], (14, 14)))
-    #net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(14, 14)))
-    #net.addLayer(FlattenLayer())
-    #net.addLayer(Layer(4*14*14, 300))
-    #net.addLayer(Layer(300, 120))
-    #net.addLayer(Layer(120, 25))
-    #net.addLayer(Layer(25, 10))
 
     #train the network
     net.load_parameters("params/MnistParams")

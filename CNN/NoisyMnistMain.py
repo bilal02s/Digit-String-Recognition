@@ -61,15 +61,6 @@ if __name__ == "__main__":
     net = Network()
 
     #add layers
-    #net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal, kernels.diagonal2], (28, 28)))
-    #net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(28, 28)))
-    #net.addLayer(ConvLayer([kernels.horizontal, kernels.vertical, kernels.diagonal], (14, 14)))
-    #net.addLayer(MaxPooling(kernels.one, stride=2, input_shape=(14, 14)))
-    #net.addLayer(FlattenLayer())
-    #net.addLayer(Layer(12*10*10, 500))
-    #net.addLayer(Layer(500, 200))
-    #net.addLayer(Layer(200, 50))
-    #net.addLayer(Layer(50, 10))
     net.setLayers([
         ConvLayer((8, 3, 3), activation='tanh', padding='valid'),
         MaxPooling(kernels.one, stride=2),
